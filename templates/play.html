@@ -1,0 +1,222 @@
+<!-- file: ./templates/play.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <title>Trust game</title>
+</head>
+
+<body>
+    <div id="app" class="container-fluid">
+        <div class="container-fluid clearfix mb-3 shadow">
+            <img class="float-left my-3" src="https://cdn1.imggmi.com/uploads/2019/9/9/8dfcec9a9802404a7c459382c75feb64-full.jpg"
+                height="62px" width="92px" />
+            <div class="float-right w-25 py-3">
+                <p class="d-inline"> User: {% raw %} {{ username }} {% endraw %} </p>
+            </div>
+        </div>
+        <div class="row mx-5" style="height: 50vh">
+            <div class="col-8">
+                <canvas id="canvas" width="400" height="400"></canvas>
+            </div>
+            <div class="col-4 pl-3">
+                <div class="row h-100">
+                    <div class="col border h-75 text-center" style="background: rgb(114, 230, 147);">
+                        <p class="my-3"> {% raw %} {{ players }} {% endraw %} online player(s) </p>
+                        <hr />
+                        <li class="m-auto py-3 text-dark" style="cursor: pointer;" v-for="member in connectedPlayers"
+                            @click="choosePlayer">
+                            {% raw %} {{ member }} {% endraw %}
+                        </li>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col text-center py-3 border h-25"
+                        style="background: #b6c0ca; font-size: 1em; font-weight: bold">
+                        {% raw %} {{ status }} {% endraw %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://js.pusher.com/4.2/pusher.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+
+            data: {
+                username: '',
+                players: 0,
+                connectedPlayers: [],
+                status: '',
+                pusher: new Pusher('2f3be046dd1cd0077dbf', {
+                    authEndpoint: '/pusher/auth',
+                    cluster: 'ap1',
+                    encrypted: true
+                }),
+                otherPlayerName: '',
+                mychannel: {},
+                otherPlayerChannel: {},
+                firstPlayer: 0,
+                turn: 0,
+            },
+
+            created() {
+                let url = new URL(window.location.href)
+                let name = url.searchParams.get("username")
+                if (name) {
+                    this.username = name
+                    this.subscribe()
+                    this.listeners()
+                } else {
+                    this.username = this.generateRandomName();
+                    location.assign("/play?username=" + this.username)
+                }
+                window.addEventListener('keyup', this.playerAction)
+            },
+
+            methods: {
+                generateRandomName: function () {
+                    let text = ''
+                    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+                    for (var i = 0; i < 6; i++) {
+                        text += possible.charAt(Math.floor(Math.random() * possible.length))
+                    }
+                    return text
+                },
+
+                subscribe: function () {
+                    // ----------------------------------------------------
+                    // Subscribe to the presence and private channels
+                    // ----------------------------------------------------
+                    let channel = this.pusher.subscribe('presence-channel')
+                    this.myChannel = this.pusher.subscribe('private-' + this.username)
+
+                    // ----------------------------------------------------
+                    // Update the number of online members on successful subscription
+                    // ----------------------------------------------------
+                    channel.bind('pusher:subscription_succeeded', (player) => {
+                        this.players = player.count - 1
+                        player.each((player) => {
+                            if (player.id != this.username)
+                                this.connectedPlayers.push(player.id)
+                        });
+                    });
+
+                    // ----------------------------------------------------
+                    // Display a notification when a new player comes online
+                    // ----------------------------------------------------
+                    channel.bind('pusher:member_added', (player) => {
+                        this.players++
+                        this.connectedPlayers.push(player.id)
+                    });
+
+                    // ---------------------------------------------------------------
+                    // Decrement the connectedPlayers array when a player disconnects
+                    // ---------------------------------------------------------------
+                    channel.bind('pusher:member_removed', (player) => {
+                        this.players--
+                        var index = this.connectedPlayers.indexOf(player.id);
+                        if (index > -1) {
+                            this.connectedPlayers.splice(index, 1)
+                        }
+                    });
+                },
+
+                listeners: function () {
+                    // ------------------------------------------------------------------------
+                    // Bind to the event that requests a new game session from the other player
+                    // ------------------------------------------------------------------------
+                    this.pusher.bind('client-' + this.username, (message) => {
+                        this.otherPlayerName = message
+                        this.otherPlayerChannel = this.pusher.subscribe('private-' + this.otherPlayerName)
+                        this.otherPlayerChannel.bind('pusher:subscription_succeeded', () => {
+                            this.otherPlayerChannel.trigger('client-game-started', this.username)
+                        })
+                        this.startGame(message)
+                    })
+
+                    // ----------------------------------------------------
+                    // Bind to the event that starts a new game session
+                    // ----------------------------------------------------
+                    this.myChannel.bind('client-game-started', (message, grid) => {
+                        this.status = "Game started with " + message
+                        this.firstPlayer = 1
+                        this.turn = 1
+                        this.startGame(message)
+                    })
+
+                    // ----------------------------------------------------------
+                    // Bind to the event that specifies that it's a players turn
+                    // ---------------------------------------------------------
+                    this.myChannel.bind('client-your-turn', () => {
+                        this.turn = 1
+                    })
+
+
+                    // -------------------------------------------------------------------------------
+                    // Bind to the event that updates the state of the gride during a game session
+                    // ------------------------------------------------------------------------------
+                    this.myChannel.bind('client-grid-update', (new_grid) => {
+                        this.draw(new_grid)
+                    })
+                },
+
+                choosePlayer: function (e) {
+                    this.otherPlayerName = e.target.innerText
+                    this.otherPlayerChannel = this.pusher.subscribe('private-' + this.otherPlayerName)
+                    this.otherPlayerChannel.bind('pusher:subscription_succeeded', () => {
+                        this.otherPlayerChannel.trigger('client-' + this.otherPlayerName, this.username)
+                    })
+                },
+                startGame: function (name) {
+                    this.status = "Game started with " + name
+                    fetch('/start')
+                        .then((resp) => resp.json())
+                        .then ((grid) => {
+                            this.draw(grid)
+                        })
+                },
+                playerAction: function (e) {
+                    if (this.turn) {
+                        var action = 0
+                        if (e.keyCode == 37) { action = 2 }
+                        if (e.keyCode == 38) { action = 0 }
+                        if (e.keyCode == 39) { action = 3 }
+                        if (e.keyCode == 40) { action = 1 }
+                        fetch(`/move/${action}-${this.firstPlayer}`)
+                            .then((resp) => resp.json())
+                            .then ((grid) => {
+                                this.draw(grid)
+                                
+                                this.otherPlayerChannel.trigger('client-your-turn', "")
+                                this.otherPlayerChannel.trigger('client-grid-update', grid)
+                            })
+                        this.turn = 0
+                    }
+                },
+                draw: function(grid) {
+                    var canvas = document.getElementById('canvas')
+                    var colors = [0, '#E0A369', '#555555', '#8600C8', '#FFCC22']
+                    if (canvas.getContext) {
+                        var ctx = canvas.getContext('2d')
+                        ctx.clearRect(0, 0, canvas.width, canvas.height)
+                        for (var i = 0; i < grid.length; i++) {
+                            for (var j = 0; j < grid[i].length; j++) {
+                                ctx.strokeRect(50 * j + 5, 50 * i + 5, 50, 50)
+                                if (grid[i][j] != 0) {
+                                    ctx.fillStyle = colors[grid[i][j]];
+                                    ctx.fillRect(50 * j + 10, 50 * i + 10, 40, 40)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
