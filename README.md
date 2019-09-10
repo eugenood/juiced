@@ -2,10 +2,13 @@
 Web application for collecting human data
 
 ## Installation
-TODO: Describe the installation process
+Execute the following command
+```
+pip install -r requirements.txt
+```
 
 ## Usage
-Execute the follow commands
+Execute the following commands
 
 For Windows
 ```
