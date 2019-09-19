@@ -61,7 +61,6 @@
                 mychannel: {},
                 otherPlayerChannel: {},
                 firstPlayer: 0,
-                turn: 0,
             },
 
             created() {
@@ -145,17 +144,8 @@
                     this.myChannel.bind('client-game-started', (message, grid) => {
                         this.status = "Game started with " + message
                         this.firstPlayer = 1
-                        this.turn = 1
                         this.startGame(message)
                     })
-
-                    // ----------------------------------------------------------
-                    // Bind to the event that specifies that it's a players turn
-                    // ---------------------------------------------------------
-                    this.myChannel.bind('client-your-turn', () => {
-                        this.turn = 1
-                    })
-
 
                     // -------------------------------------------------------------------------------
                     // Bind to the event that updates the state of the gride during a game session
@@ -181,22 +171,17 @@
                         })
                 },
                 playerAction: function (e) {
-                    if (this.turn) {
-                        var action = 0
-                        if (e.keyCode == 37) { action = 2 }
-                        if (e.keyCode == 38) { action = 0 }
-                        if (e.keyCode == 39) { action = 3 }
-                        if (e.keyCode == 40) { action = 1 }
-                        fetch(`/move/${action}-${this.firstPlayer}`)
-                            .then((resp) => resp.json())
-                            .then ((grid) => {
-                                this.draw(grid)
-                                
-                                this.otherPlayerChannel.trigger('client-your-turn', "")
-                                this.otherPlayerChannel.trigger('client-grid-update', grid)
-                            })
-                        this.turn = 0
-                    }
+                    var action = 0
+                    if (e.keyCode == 37) { action = 2 }
+                    if (e.keyCode == 38) { action = 0 }
+                    if (e.keyCode == 39) { action = 3 }
+                    if (e.keyCode == 40) { action = 1 }
+                    fetch(`/move/${action}-${this.firstPlayer}`)
+                        .then((resp) => resp.json())
+                        .then ((grid) => {
+                            this.draw(grid)
+                            this.otherPlayerChannel.trigger('client-grid-update', grid)
+                        })
                 },
                 draw: function(grid) {
                     var canvas = document.getElementById('canvas')
