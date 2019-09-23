@@ -10,7 +10,7 @@ def get_configuration():
 
     return {
 
-        "stage": (10, 10),
+        "stage": (10, 12),
         "human": (randint(0, 10), randint(0, 10)),
         "robot": (randint(0, 10), randint(0, 10)),
         "walls": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],

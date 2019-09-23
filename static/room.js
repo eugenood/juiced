@@ -1,11 +1,11 @@
 GRID_SIZE = 30
 GRID_PADDING = 2
-BORDER_OFFSET = 5
+BORDER_OFFSET = 4
 
 function room(state_image) {
     var board = document.getElementById('board')
-    board.setAttribute('width', state_image.length * GRID_SIZE + BORDER_OFFSET)
-    board.setAttribute('height', state_image[0].length * GRID_SIZE + BORDER_OFFSET)
+    board.setAttribute('width', state_image[0].length * GRID_SIZE + BORDER_OFFSET)
+    board.setAttribute('height', state_image.length * GRID_SIZE + BORDER_OFFSET)
     if (board.getContext) {
         var context = board.getContext('2d')
         context.clearRect(0, 0, board.width, board.height)
