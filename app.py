@@ -1,20 +1,26 @@
+from random import randint
+
 from pusher import pusher
 from flask import Flask, render_template, request, redirect, json, url_for, send_from_directory
 
 from room import Room
 
-configuration = {
 
-    "stage": (10, 10),
-    "human": (0, 0),
-    "robot": (9, 9),
-    "walls": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],
-    "cups": [(2, 0), (4, 0), (6, 0)],
-    "juicers": [(2, 9), (4, 9), (6, 9)],
-    "apple_storages": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
-    "orange_storages": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
+def get_configuration():
 
-}
+    return {
+
+        "stage": (10, 10),
+        "human": (randint(0, 10), randint(0, 10)),
+        "robot": (randint(0, 10), randint(0, 10)),
+        "walls": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],
+        "cups": [(2, 0), (4, 0), (6, 0)],
+        "juicers": [(2, 9), (4, 9), (6, 9)],
+        "apple_storages": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
+        "orange_storages": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
+
+    }
+
 
 app = Flask(__name__)
 
@@ -49,7 +55,7 @@ def login():
     room_id = request.form.get("room_id")
     if is_valid(username, room_id):
         if room_id not in rooms:
-            rooms[room_id] = Room(room_id, configuration)
+            rooms[room_id] = Room(room_id, get_configuration())
         rooms[room_id].add_player(username)
         return redirect(url_for("room", room_id=room_id))
     return "not available"
