@@ -1,22 +1,32 @@
 from pusher import pusher
-from flask import Flask, render_template, request, jsonify, make_response, json
-from state import State
-import numpy as np
+from flask import Flask, render_template, request, redirect, json, url_for, send_from_directory
 
-INITIAL_HUMAN_LOCATION = np.array([0, 0])
-INITIAL_AGENT_LOCATION = np.array([5, 5])
+from room import Room
 
-INITIAL_GRAPE_LOCATIONS = [np.array([1, 1]), np.array([2, 2]), np.array([3, 3]), np.array([4, 4])]
-INITIAL_MANGO_LOCATIONS = [np.array([1, 4]), np.array([2, 3]), np.array([3, 2]), np.array([4, 1])]
+configuration = {
 
-ACTION_NO_OP = -1
-ACTION_UP = 0
-ACTION_DOWN = 1
-ACTION_LEFT = 2
-ACTION_RIGHT = 3
-ACTION_SPACE = [ACTION_UP, ACTION_DOWN, ACTION_LEFT, ACTION_RIGHT]
+    "stage": (10, 10),
+    "human": (0, 0),
+    "robot": (9, 9),
+    "walls": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],
+    "cups": [(2, 0), (4, 0), (6, 0)],
+    "juicers": [(2, 9), (4, 9), (6, 9)],
+    "apple_storages": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
+    "orange_storages": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
+
+}
 
 app = Flask(__name__)
+
+if app.config["DEBUG"]:
+    @app.after_request
+    def after_request(response):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+        response.headers["Expires"] = 0
+        response.headers["Pragma"] = "no-cache"
+        return response
+
+rooms = {}
 
 pusher = pusher_client = pusher.Pusher(
     app_id="858327",
@@ -26,52 +36,40 @@ pusher = pusher_client = pusher.Pusher(
     ssl=True
 )
 
-@app.route('/')
+
+@app.route("/", methods=["GET"])
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/play')
-def play():
-    global name
-    name = request.args.get('username')
-    return render_template('play.html')
 
-@app.route("/pusher/auth", methods=['POST'])
-def pusher_authentication():
-    auth = pusher.authenticate(
-        channel=request.form['channel_name'],
-        socket_id=request.form['socket_id'],
-        custom_data={
-            u'user_id': name,
-            u'user_info': {
-                u'role': u'player'
-            }
-        }
-    )
-    return json.dumps(auth)
+@app.route("/login", methods=["POST"])
+def login():
+    global rooms
+    username = request.form.get("username")
+    room_id = request.form.get("room_id")
+    if is_valid(username, room_id):
+        if room_id not in rooms:
+            rooms[room_id] = Room(room_id, configuration)
+        rooms[room_id].add_player(username)
+        return redirect(url_for("room", room_id=room_id))
+    return "not available"
 
-@app.route('/start')
-def start():
-    global state, total_reward
-    state = State(INITIAL_HUMAN_LOCATION, INITIAL_AGENT_LOCATION, INITIAL_GRAPE_LOCATIONS, INITIAL_MANGO_LOCATIONS)
-    total_reward = 0
-    grid = str(state.grid).replace(' ', ',')
-    return grid
 
-@app.route('/move/<action>-<player>')
-def move(action, player):
-    global state, total_reward
-    if int(player):
-        human_action = ACTION_SPACE[int(action)]
-        agent_action = ACTION_NO_OP
-    else:
-        agent_action = ACTION_SPACE[int(action)]
-        human_action = ACTION_NO_OP
-    reward, next_state = state.step(human_action, agent_action)
-    total_reward += reward
-    state = next_state
-    grid = str(state.grid).replace(' ', ',')
-    return grid
+@app.route("/room/<room_id>", methods=["GET"])
+def room(room_id):
+    global rooms
+    state_image = json.dumps(rooms[room_id].get_state_image())
+    return render_template("room.html", state_image=state_image)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+@app.route('/images/<path:path>')
+def images(path):
+    return send_from_directory('images', path)
+
+
+def is_valid(username, room_id):
+    return True
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
