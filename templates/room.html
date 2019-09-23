@@ -5,11 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Trust Game</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
         <script src="{{ url_for('static', filename='room.js') }}"></script>
     </head>
     <body>
         <canvas id="board" class="board"></canvas>
         <script>var state_image = {{ state_image | safe }}</script>
-        <script>room(state_image)</script>
+        <script>initialize_room(state_image)</script>
     </body>
 </html>
