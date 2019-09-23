@@ -13,7 +13,7 @@ body, html {
 
 .login-box {
     align-items: center;
-    background-color: #fff;
+    background-color: #333;
     border-radius: 10px;
     box-shadow: 3px 3px #ccc;
     display: flex;
@@ -24,6 +24,7 @@ body, html {
 }
 
 .login-box img {
+    margin-bottom: 20px;
     width: 50%;
 }
 
@@ -42,8 +43,4 @@ body, html {
     margin-top: 20px;
     padding: 10px;
     text-shadow: none;
-}
-
-.board {
-    margin: auto;
 }

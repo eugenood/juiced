@@ -1,5 +1,3 @@
-import numpy as np
-
 from stage import Stage
 
 
@@ -32,6 +30,10 @@ class Room:
 
         for i in range(len(state_image)):
             for j in range(len(state_image[i])):
-                state_image[i][j] = "../" + state_image[i][j]
+                state_image[i][j] = "../../" + state_image[i][j]
 
         return state_image
+
+    def is_full(self):
+
+        return self.human_username is not None and self.robot_username is not None

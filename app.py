@@ -5,11 +5,15 @@ from flask_socketio import SocketIO
 
 from room import Room
 
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
+socket = SocketIO(app)
+
+rooms = {}
+
 
 def get_configuration():
-
     return {
-
         "stage": (10, 10),
         "human": (randint(0, 9), randint(0, 9)),
         "robot": (randint(0, 9), randint(0, 9)),
@@ -18,31 +22,7 @@ def get_configuration():
         "juicers": [(2, 9), (4, 9), (6, 9)],
         "apple_storages": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
         "orange_storages": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
-
     }
-
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
-socketio = SocketIO(app)
-
-if app.config["DEBUG"]:
-    @app.after_request
-    def after_request(response):
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
-        response.headers["Expires"] = 0
-        response.headers["Pragma"] = "no-cache"
-        return response
-
-rooms = {}
-
-@socketio.on('action_performed')
-def handle_action_performed(req):
-    global rooms
-    action = req["action"]
-    rooms["123"].stage.human.act(action)
-    state_image = json.dumps(rooms["123"].get_state_image())
-    socketio.emit('state_changed', state_image)
 
 
 @app.route("/", methods=["GET"])
@@ -55,21 +35,21 @@ def login():
     global rooms
     username = request.form.get("username")
     room_id = request.form.get("room_id")
-    if is_valid(username, room_id):
-        if room_id not in rooms:
-            rooms[room_id] = Room(room_id, get_configuration())
-        rooms[room_id].add_player(username)
-        return redirect(url_for("room", room_id=room_id))
-    return "not available"
+    if room_id not in rooms:
+        rooms[room_id] = Room(room_id, get_configuration())
+    elif rooms[room_id].is_full():
+        return "Room is full"
+    rooms[room_id].add_player(username)
+    return redirect(url_for("room", room_id=room_id, username=username))
 
 
-@app.route("/room/<room_id>", methods=["GET"])
-def room(room_id):
+@app.route("/room/<room_id>/<username>", methods=["GET"])
+def room(room_id, username):
     global rooms
     if room_id in rooms:
         state_image = json.dumps(rooms[room_id].get_state_image())
-        return render_template("room.html", state_image=state_image)
-    return "error"
+        return render_template("room.html", room_id=room_id, username=username, state_image=state_image)
+    return "Room not found"
 
 
 @app.route('/images/<path:path>')
@@ -77,9 +57,33 @@ def images(path):
     return send_from_directory('images', path)
 
 
+@socket.on('user_entered')
+def handle_user_entered(req):
+    global rooms
+    room_id = req["room_id"]
+    human_username = rooms[room_id].human_username
+    robot_username = rooms[room_id].robot_username
+    socket.emit('user_changed', data=(human_username, robot_username))
+
+
+@socket.on('action_performed')
+def handle_action_performed(req):
+    global rooms
+    room_id = req["room_id"]
+    username = req["username"]
+    action = req["action"]
+    print(action, room_id, username)
+    if username == rooms[room_id].human_username:
+        rooms[room_id].stage.human.act(action)
+    elif username == rooms[room_id].robot_username:
+        rooms[room_id].stage.robot.act(action)
+    state_image = json.dumps(rooms[room_id].get_state_image())
+    socket.emit('state_changed', state_image)
+
+
 def is_valid(username, room_id):
     return True
 
 
 if __name__ == "__main__":
-    socketio.run(app)
+    socket.run(app, debug=True)
