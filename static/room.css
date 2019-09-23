@@ -74,3 +74,55 @@ body {
 .board {
     margin: auto;
 }
+
+.overlay {
+    position: absolute;
+    background-color: #0003;
+    border-radius: 50%;
+    bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    right: 10px;
+    width: 150px;
+    height: 150px;
+
+}
+
+.overlay div {
+    height: 50px;
+    padding: 5px;
+    width: 50px;
+}
+
+.overlay img {
+    height: 40px;
+    width: 40px;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+.overlay #button-up {
+    grid-row-start: 1;
+    grid-column-start: 2;
+}
+
+.overlay #button-down {
+    grid-row: 3;
+    grid-column: 2;
+}
+
+.overlay #button-left {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.overlay #button-right {
+    grid-row: 2;
+    grid-column: 3;
+}
+
+.overlay #button-interact {
+    grid-row: 2;
+    grid-column: 2;
+}

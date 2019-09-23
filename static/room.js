@@ -9,15 +9,40 @@ window.onload = function() {
         board.setAttribute('width', stateImage[0].length * GRID_SIZE + BORDER_OFFSET)
         board.setAttribute('height', stateImage.length * GRID_SIZE + BORDER_OFFSET)
         window.addEventListener('keydown', act)
+        document.getElementById('button-up').addEventListener('click', moveUp)
+        document.getElementById('button-down').addEventListener('click', moveDown)
+        document.getElementById('button-left').addEventListener('click', moveLeft)
+        document.getElementById('button-right').addEventListener('click', moveRight)
+        document.getElementById('button-interact').addEventListener('click', interact)
         renderRoom(stateImage)
     }
 
     function act(event) {
-        if (event.keyCode == 38) { socket.emit('action_performed', { room_id: roomId, username: username, action: 0 }) }
-        if (event.keyCode == 40) { socket.emit('action_performed', { room_id: roomId, username: username, action: 1 }) }
-        if (event.keyCode == 37) { socket.emit('action_performed', { room_id: roomId, username: username, action: 2 }) }
-        if (event.keyCode == 39) { socket.emit('action_performed', { room_id: roomId, username: username, action: 3 }) }
-        if (event.keyCode == 32) { socket.emit('action_performed', { room_id: roomId, username: username, action: 4 }) }
+        if (event.keyCode == 38) { moveUp() }
+        if (event.keyCode == 40) { moveDown() }
+        if (event.keyCode == 37) { moveLeft() }
+        if (event.keyCode == 39) { moveRight() }
+        if (event.keyCode == 32) { interact() }
+    }
+
+    function moveUp() {
+        socket.emit('action_performed', { room_id: roomId, username: username, action: 0 })
+    }
+
+    function moveDown() {
+        socket.emit('action_performed', { room_id: roomId, username: username, action: 1 })
+    }
+
+    function moveLeft() {
+        socket.emit('action_performed', { room_id: roomId, username: username, action: 2 })
+    }
+
+    function moveRight() {
+        socket.emit('action_performed', { room_id: roomId, username: username, action: 3 })
+    }
+
+    function interact() {
+        socket.emit('action_performed', { room_id: roomId, username: username, action: 4 })
     }
 
     function renderRoom(stateImage) {

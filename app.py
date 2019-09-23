@@ -72,7 +72,6 @@ def handle_action_performed(req):
     room_id = req["room_id"]
     username = req["username"]
     action = req["action"]
-    print(action, room_id, username)
     if username == rooms[room_id].human_username:
         rooms[room_id].stage.human.act(action)
     elif username == rooms[room_id].robot_username:
@@ -86,4 +85,4 @@ def is_valid(username, room_id):
 
 
 if __name__ == "__main__":
-    socket.run(app, debug=True)
+    socket.run(app, host="0.0.0.0")

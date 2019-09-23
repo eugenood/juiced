@@ -19,6 +19,13 @@
         <div class="container">
             <canvas id="board" class="board"></canvas>
         </div>
+        <div class="overlay">
+            <div id="button-up"><img src="{{ url_for('static', filename='button_up.svg') }}"></div>
+            <div id="button-down"><img src="{{ url_for('static', filename='button_down.svg') }}"></div>
+            <div id="button-left"><img src="{{ url_for('static', filename='button_left.svg') }}"></div>
+            <div id="button-right"><img src="{{ url_for('static', filename='button_right.svg') }}"></div>
+            <div id="button-interact"><img src="{{ url_for('static', filename='button_interact.svg') }}"></div>
+        </div>
         <script>
             var roomId = "{{ room_id }}"
             var username = "{{ username }}"
