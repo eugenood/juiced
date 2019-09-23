@@ -17,10 +17,10 @@ body {
 }
 
 @media only screen and (min-width: 600px) {
-  body {
-    margin: 0 auto;
-    width: 600px;
-  }
+    body {
+        margin: 0 auto;
+        width: 600px;
+    }
 }
 
 .header {
@@ -125,4 +125,10 @@ body {
 .overlay #button-interact {
     grid-row: 2;
     grid-column: 2;
+}
+
+@media only screen and (min-width: 600px) {
+    .overlay {
+        display: none;
+    }
 }
