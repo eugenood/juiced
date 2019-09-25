@@ -48,7 +48,6 @@ window.onload = function() {
     function renderRoom(stateImage) {
         if (board.getContext) {
             var context = board.getContext('2d')
-            context.clearRect(0, 0, board.width, board.height)
             for (var i = 0; i < stateImage.length; i++) {
                 for (var j = 0; j < stateImage[i].length; j++) {
                     context.strokeRect(GRID_SIZE * j + GRID_PADDING,
