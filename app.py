@@ -63,7 +63,7 @@ def handle_user_entered(req):
     room_id = req["room_id"]
     human_username = rooms[room_id].human_username
     robot_username = rooms[room_id].robot_username
-    socket.emit('user_changed', data=(human_username, robot_username))
+    socket.emit('user_changed' + room_id, data=(human_username, robot_username))
 
 
 @socket.on('action_performed')
@@ -77,7 +77,7 @@ def handle_action_performed(req):
     elif username == rooms[room_id].robot_username:
         rooms[room_id].stage.robot.act(action)
     state_image = json.dumps(rooms[room_id].get_state_image())
-    socket.emit('state_changed', state_image)
+    socket.emit('state_changed' + room_id, state_image)
 
 
 def is_valid(username, room_id):

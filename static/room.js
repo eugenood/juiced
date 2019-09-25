@@ -74,12 +74,12 @@ window.onload = function() {
 
     var socket = io.connect()
 
-    socket.on('user_changed', function(humanUsername, robotUsername) {
+    socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
         document.getElementById('human-username').innerHTML = humanUsername
         document.getElementById('robot-username').innerHTML = robotUsername
     })
 
-    socket.on('state_changed', function(stateImage) {
+    socket.on('state_changed' + roomId, function(stateImage) {
         renderRoom(JSON.parse(stateImage))
     })
 
