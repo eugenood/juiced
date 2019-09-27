@@ -11,9 +11,6 @@ class Room:
         self.human_username = None
         self.robot_username = None
 
-        self.human_action = None
-        self.robot_action = None
-
     def add_player(self, username):
 
         if self.human_username is None:
@@ -22,35 +19,10 @@ class Room:
         elif self.robot_username is None:
             self.robot_username = username
 
-    def human_act(self, human_action):
+    def act(self, human_action, robot_action):
 
-        if self.human_action is None:
-            self.human_action = human_action
-
-        if self.robot_action is not None:
-            self._act()
-            return True
-
-        return False
-
-    def robot_act(self, robot_action):
-
-        if self.robot_action is None:
-            self.robot_action = robot_action
-
-        if self.human_action is not None:
-            self._act()
-            return True
-        
-        return False
-    
-    def _act(self):
-
-        self.stage.human.act(self.human_action)
-        self.stage.robot.act(self.robot_action)
-
-        self.human_action = None
-        self.robot_action = None
+        self.stage.human.act(human_action)
+        self.stage.robot.act(robot_action)
 
     def get_state_image(self):
 

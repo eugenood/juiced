@@ -27,27 +27,22 @@ window.onload = function() {
 
     function moveUp() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 0 })
-        document.getElementById('popup').style.display = 'block';
     }
 
     function moveDown() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 1 })
-        document.getElementById('popup').style.display = 'block';
     }
 
     function moveLeft() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 2 })
-        document.getElementById('popup').style.display = 'block';
     }
 
     function moveRight() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 3 })
-        document.getElementById('popup').style.display = 'block';
     }
 
     function interact() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 4 })
-        document.getElementById('popup').style.display = 'block';
     }
 
     function renderRoom(stateImage) {
@@ -85,7 +80,6 @@ window.onload = function() {
 
     socket.on('state_changed' + roomId, function(stateImage) {
         renderRoom(JSON.parse(stateImage))
-        document.getElementById('popup').style.display = 'none';
     })
 
     initializeRoom(stateImage)

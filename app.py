@@ -70,12 +70,14 @@ def handle_action_performed(req):
     room_id = req["room_id"]
     username = req["username"]
     action = req["action"]
+    is_action_made = False
     if username == rooms[room_id].human_username:
-        rooms[room_id].stage.human.act(action)
+        is_action_made = rooms[room_id].human_act(action)
     elif username == rooms[room_id].robot_username:
-        rooms[room_id].stage.robot.act(action)
-    state_image = json.dumps(rooms[room_id].get_state_image())
-    socket.emit('state_changed' + room_id, state_image)
+        is_action_made = rooms[room_id].robot_act(action)
+    if is_action_made:
+        state_image = json.dumps(rooms[room_id].get_state_image())
+        socket.emit('state_changed' + room_id, state_image)
 
 
 if __name__ == "__main__":

@@ -49,7 +49,7 @@ body {
 }
 
 .info .human-info {
-    background-color: #e74c3c;
+    background-color: #2ecc71;
     border-radius: 0 10px 10px 0;
 }
 
@@ -58,10 +58,6 @@ body {
     border-radius: 10px 0 0 10px;
     justify-self: end;
     text-align: right;
-}
-
-.green {
-    background-color: #2ecc71;
 }
 
 .big {
@@ -129,16 +125,6 @@ body {
 .overlay #button-interact {
     grid-row: 2;
     grid-column: 2;
-}
-
-#popup {
-    background-color: black;
-    bottom: 0;
-    color: white;
-    display: none;
-    font-family: sans;
-    padding: 10px 20px;
-    position: absolute;
 }
 
 @media only screen and (min-width: 600px) {
