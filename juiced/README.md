@@ -4,20 +4,6 @@ Juiced is an open-source environment for testing out cooperative reinforcement l
 
 ![Juiced Example](docs/juiced_example.gif)
 
-## Installation
-
-To install Juiced, clone this repository and install the dependencies. The following script assumes you are using `dnf`
-for your package manager.
-
-```bash
-# clone repository
-git clone https://github.com/trust-game/juiced
-cd juiced
-
-# install dependencies
-pip install numpy
-```
-
 ## Adding custom entities
 
 Juiced is written in a way to allow easy addition of custom entities. This brief tutorial shall walk you through the
