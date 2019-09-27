@@ -1,13 +1,10 @@
 class Carriable: pass
 
 
-class Fruit(Carriable): pass
+class Apple(Carriable): pass
 
 
-class Apple(Fruit): pass
-
-
-class Orange(Fruit): pass
+class Orange(Carriable): pass
 
 
 class Cup(Carriable):

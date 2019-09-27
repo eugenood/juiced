@@ -1,4 +1,4 @@
-from stage import Stage
+from juiced.stage import Stage
 
 
 class Room:
@@ -30,7 +30,7 @@ class Room:
 
         for i in range(len(state_image)):
             for j in range(len(state_image[i])):
-                state_image[i][j] = "../../" + state_image[i][j]
+                state_image[i][j] = "../../images/" + state_image[i][j]
 
         return state_image
 

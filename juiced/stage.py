@@ -1,8 +1,8 @@
 import numpy as np
 
-from character import Human, Robot
-from interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Wall
-from metadata import MetadataStore
+from juiced.character import Human, Robot
+from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Wall
+from juiced.metadata import Metadata
 
 
 class Stage:
@@ -13,7 +13,7 @@ class Stage:
         self.width = configuration["stage"][1]
 
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
-        self.metadata_store = MetadataStore()
+        self.metadata = Metadata()
 
         self._initialize_characters(configuration)
         self._initialize_entities(configuration)
@@ -47,13 +47,14 @@ class Stage:
 
     def move(self, old_x, old_y, new_x, new_y):
 
-        if new_x < 0 or new_x >= self.height: return
-        if new_y < 0 or new_y >= self.width: return
+        if new_x < 0 or new_x >= self.height: return False
+        if new_y < 0 or new_y >= self.width: return False
+        if self.grid[new_x][new_y] is not None: return False
 
-        if self.grid[new_x][new_y] is None:
+        self.grid[new_x][new_y] = self.grid[old_x][old_y]
+        self.grid[old_x][old_y] = None
 
-            self.grid[new_x][new_y] = self.grid[old_x][old_y]
-            self.grid[old_x][old_y] = None
+        return True
 
     def find(self, entity):
 
@@ -71,7 +72,7 @@ class Stage:
         for x in range(self.height):
             for y in range(self.width):
                 item = self.get(x, y)
-                state[x][y] = self.metadata_store.get_metadata(item).index
+                state[x][y] = self.metadata[item].index
 
         return state
 
@@ -82,7 +83,7 @@ class Stage:
         for x in range(self.height):
             for y in range(self.width):
                 item = self.get(x, y)
-                state_image[x][y] = self.metadata_store.get_metadata(item).image_url
+                state_image[x][y] = self.metadata[item].url
 
         return state_image
 

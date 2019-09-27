@@ -1,14 +1,12 @@
 from random import randint
 
-from flask import Flask, render_template, request, redirect, json, url_for, send_from_directory
+from flask import Flask, json, redirect, render_template, request, send_from_directory, url_for
 from flask_socketio import SocketIO
 
 from room import Room
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socket = SocketIO(app)
-
 rooms = {}
 
 
@@ -54,7 +52,7 @@ def room(room_id, username):
 
 @app.route('/images/<path:path>')
 def images(path):
-    return send_from_directory('images', path)
+    return send_from_directory('juiced/images', path)
 
 
 @socket.on('user_entered')
@@ -80,9 +78,5 @@ def handle_action_performed(req):
     socket.emit('state_changed' + room_id, state_image)
 
 
-def is_valid(username, room_id):
-    return True
-
-
 if __name__ == "__main__":
-    socket.run(app, host="0.0.0.0")
+    socket.run(app, host="0.0.0.0", debug=True)
