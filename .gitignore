@@ -3,6 +3,7 @@ env
 include
 lib
 lib64
+trajectories
 venv
 
 __pycache__

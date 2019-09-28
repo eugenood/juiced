@@ -1,25 +1,10 @@
-from json import dumps
-from random import randint
+import json
+import os
 
 from juiced.stage import Stage
 
 
 class Room:
-
-    def get_configuration():
-        
-        return {
-
-            "stage": (10, 10),
-            "human": (randint(0, 9), randint(0, 9)),
-            "robot": (randint(0, 9), randint(0, 9)),
-            "walls": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],
-            "cups": [(2, 0), (4, 0), (6, 0)],
-            "juicers": [(2, 9), (4, 9), (6, 9)],
-            "apple_storages": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
-            "orange_storages": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
-
-        }
 
     def __init__(self, room_id, configuration):
         
@@ -30,12 +15,12 @@ class Room:
         
         self.human_username = None
         self.robot_username = None
-        
-        self.human_action = None
-        self.robot_action = None
 
         self.human_actions = []
         self.robot_actions = []
+
+        self.human_action = None
+        self.robot_action = None
 
     def add_player(self, username):
 
@@ -50,22 +35,14 @@ class Room:
         if self.human_action is None:
             self.human_action = human_action
         
-        if self.robot_action is not None:
-            self._act()
-            return True
-        
-        return False
+        return self._act()
 
     def robot_act(self, robot_action):
 
         if self.robot_action is None:
             self.robot_action = robot_action
         
-        if self.human_action is not None:
-            self._act()
-            return True
-        
-        return False
+        return self._act()
 
     def get_state(self, in_url=False):
 
@@ -97,13 +74,18 @@ class Room:
 
         }
 
-        json = dumps(history)
-        f = open(self.room_id + ".json", "w")
-        f.write(json)
-        f.close()
+        if not os.path.exists("trajectories"):
+            os.makedirs("trajectories")
+
+        trajectory_file = open("trajectories/" + self.room_id + ".json", "w")
+        trajectory_file.write(json.dumps(history))
+        trajectory_file.close()
 
 
     def _act(self):
+
+        if self.human_action is None or self.robot_action is None:
+            return False
 
         self.stage.human.act(self.human_action)
         self.stage.robot.act(self.robot_action)
@@ -113,3 +95,5 @@ class Room:
         
         self.human_action = None
         self.robot_action = None
+
+        return True

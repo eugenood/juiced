@@ -3,6 +3,7 @@ from random import randint
 from flask import Flask, json, redirect, render_template, request, send_from_directory, url_for
 from flask_socketio import SocketIO
 
+from juiced.configuration import config_smallworld, config_bigworld
 from server.room import Room
 
 
@@ -22,7 +23,7 @@ def login():
     username = request.form.get("username")
     room_id = request.form.get("room_id")
     if room_id not in rooms:
-        rooms[room_id] = Room(room_id, Room.get_configuration())
+        rooms[room_id] = Room(room_id, config_smallworld)
     elif rooms[room_id].is_full():
         return "Room is full"
     rooms[room_id].add_player(username)
@@ -70,4 +71,4 @@ def handle_action_performed(req):
 
 
 if __name__ == '__main__':
-    socket.run(app, host="0.0.0.0", debug=True)
+    socket.run(app, host="0.0.0.0")
