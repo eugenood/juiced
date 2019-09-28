@@ -65,7 +65,9 @@ def handle_action_performed(req):
         is_action_made = rooms[room_id].robot_act(action)
     if is_action_made:
         state = json.dumps(rooms[room_id].get_state(in_url=True))
+        rooms[room_id].dump_history()
         socket.emit('state_changed' + room_id, state)
+
 
 if __name__ == '__main__':
     socket.run(app, host="0.0.0.0", debug=True)

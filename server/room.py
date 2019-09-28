@@ -1,3 +1,4 @@
+from json import dumps
 from random import randint
 
 from juiced.stage import Stage
@@ -6,7 +7,7 @@ from juiced.stage import Stage
 class Room:
 
     def get_configuration():
-
+        
         return {
 
             "stage": (10, 10),
@@ -21,21 +22,26 @@ class Room:
         }
 
     def __init__(self, room_id, configuration):
-
+        
         self.room_id = room_id
-        self.stage = Stage(configuration)
+        self.configuration = configuration
 
+        self.stage = Stage(configuration)
+        
         self.human_username = None
         self.robot_username = None
-
+        
         self.human_action = None
         self.robot_action = None
+
+        self.human_actions = []
+        self.robot_actions = []
 
     def add_player(self, username):
 
         if self.human_username is None:
             self.human_username = username
-
+        
         elif self.robot_username is None:
             self.robot_username = username
 
@@ -43,18 +49,18 @@ class Room:
 
         if self.human_action is None:
             self.human_action = human_action
-
+        
         if self.robot_action is not None:
             self._act()
             return True
-
+        
         return False
 
     def robot_act(self, robot_action):
 
         if self.robot_action is None:
             self.robot_action = robot_action
-
+        
         if self.human_action is not None:
             self._act()
             return True
@@ -78,10 +84,32 @@ class Room:
 
         return self.human_username is not None and self.robot_username is not None
 
+    def dump_history(self):
+        
+        history = {
+
+            "room_id": self.room_id,
+            "human_username": self.human_username,
+            "robot_username": self.robot_username,
+            "configuration": self.configuration,
+            "human_actions": self.human_actions,
+            "robot_actions": self.robot_actions
+
+        }
+
+        json = dumps(history)
+        f = open(self.room_id + ".json", "w")
+        f.write(json)
+        f.close()
+
+
     def _act(self):
 
         self.stage.human.act(self.human_action)
         self.stage.robot.act(self.robot_action)
 
+        self.human_actions.append(self.human_action)
+        self.robot_actions.append(self.robot_action)
+        
         self.human_action = None
         self.robot_action = None
