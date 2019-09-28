@@ -63,27 +63,19 @@ class Stage:
 
         return -1, -1
 
-    def get_state(self):
+    def get_state(self, in_url=False):
 
         state = [[None for _ in range(self.width)] for _ in range(self.height)]
 
         for x in range(self.height):
             for y in range(self.width):
                 item = self.get(x, y)
-                state[x][y] = self.metadata[item].index
+                if not in_url:
+                    state[x][y] = self.metadata[item].index
+                else:
+                    state[x][y] = self.metadata[item].url
 
         return state
-
-    def get_state_image(self):
-
-        state_image = [[None for _ in range(self.width)] for _ in range(self.height)]
-
-        for x in range(self.height):
-            for y in range(self.width):
-                item = self.get(x, y)
-                state_image[x][y] = self.metadata[item].url
-
-        return state_image
 
     def _initialize_characters(self, configuration):
 

@@ -52,15 +52,18 @@ class Room:
         self.human_action = None
         self.robot_action = None
 
-    def get_state_image(self):
+    def get_state(self, in_url=False):
 
-        state_image = self.stage.get_state_image()
+        state = self.stage.get_state(in_url)
 
-        for i in range(len(state_image)):
-            for j in range(len(state_image[i])):
-                state_image[i][j] = "../../images/" + state_image[i][j]
+        if not in_url:
+            return state
 
-        return state_image
+        for i in range(len(state)):
+            for j in range(len(state[i])):
+                state[i][j] = "../../images/" + state[i][j]
+
+        return state
 
     def is_full(self):
 

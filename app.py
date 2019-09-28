@@ -45,8 +45,8 @@ def login():
 def room(room_id, username):
     global rooms
     if room_id in rooms:
-        state_image = json.dumps(rooms[room_id].get_state_image())
-        return render_template("room.html", room_id=room_id, username=username, state_image=state_image)
+        state = json.dumps(rooms[room_id].get_state(in_url=True))
+        return render_template("room.html", room_id=room_id, username=username, state=state)
     return "Room not found"
 
 
@@ -76,8 +76,8 @@ def handle_action_performed(req):
     elif username == rooms[room_id].robot_username:
         is_action_made = rooms[room_id].robot_act(action)
     if is_action_made:
-        state_image = json.dumps(rooms[room_id].get_state_image())
-        socket.emit('state_changed' + room_id, state_image)
+        state = json.dumps(rooms[room_id].get_state(in_url=True))
+        socket.emit('state_changed' + room_id, state)
 
 
 if __name__ == "__main__":
