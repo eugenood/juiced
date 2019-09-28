@@ -3,24 +3,12 @@ from random import randint
 from flask import Flask, json, redirect, render_template, request, send_from_directory, url_for
 from flask_socketio import SocketIO
 
-from room import Room
+from server.room import Room
 
-app = Flask(__name__)
+
+app = Flask(__name__, static_folder='server/static', template_folder='server/templates')
 socket = SocketIO(app)
 rooms = {}
-
-
-def get_configuration():
-    return {
-        "stage": (10, 10),
-        "human": (randint(0, 9), randint(0, 9)),
-        "robot": (randint(0, 9), randint(0, 9)),
-        "walls": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],
-        "cups": [(2, 0), (4, 0), (6, 0)],
-        "juicers": [(2, 9), (4, 9), (6, 9)],
-        "apple_storages": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
-        "orange_storages": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
-    }
 
 
 @app.route("/", methods=["GET"])
@@ -34,7 +22,7 @@ def login():
     username = request.form.get("username")
     room_id = request.form.get("room_id")
     if room_id not in rooms:
-        rooms[room_id] = Room(room_id, get_configuration())
+        rooms[room_id] = Room(room_id, Room.get_configuration())
     elif rooms[room_id].is_full():
         return "Room is full"
     rooms[room_id].add_player(username)
@@ -79,6 +67,5 @@ def handle_action_performed(req):
         state = json.dumps(rooms[room_id].get_state(in_url=True))
         socket.emit('state_changed' + room_id, state)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     socket.run(app, host="0.0.0.0", debug=True)

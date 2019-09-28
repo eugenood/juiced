@@ -9,27 +9,45 @@
         <script src="{{ url_for('static', filename='room.js') }}"></script>
     </head>
     <body>
-        <div class="header">
-            <img src="{{ url_for('static', filename='logo.png') }}">
-        </div>
-        <div class="info">
-            <div class="human-info"><p>human</p><p class="big" id="human-username">HumanUsername</p></div>
-            <div class="robot-info"><p>robot</p><p class="big" id="robot-username">RobotUsername</p></div>
-        </div>
-        <div class="container">
-            <canvas id="board" class="board"></canvas>
-        </div>
-        <div class="overlay">
-            <div id="button-up"><img src="{{ url_for('static', filename='button_up.svg') }}"></div>
-            <div id="button-down"><img src="{{ url_for('static', filename='button_down.svg') }}"></div>
-            <div id="button-left"><img src="{{ url_for('static', filename='button_left.svg') }}"></div>
-            <div id="button-right"><img src="{{ url_for('static', filename='button_right.svg') }}"></div>
-            <div id="button-interact"><img src="{{ url_for('static', filename='button_interact.svg') }}"></div>
+        <div id="container">
+            <div id="info">
+                <div id="human-infobox" class="infobox">
+                    <p>human</p>
+                    <p id="human-username" class="username"></p>
+                </div>
+                <div id="robot-infobox" class="infobox">
+                    <p>robot</p>
+                    <p id="robot-username" class="username"></p>
+                </div>
+            </div>
+            <div id="game">
+                <canvas id="board"></canvas>
+            </div>
+            <div id="joystick">
+                <div id="button-interact" class="joystick-button">
+                    <img src="{{ url_for('static', filename='button_interact.svg') }}">
+                </div>
+                <div id="button-up" class="joystick-button">
+                    <img src="{{ url_for('static', filename='button_up.svg') }}">
+                </div>
+                <div id="button-down" class="joystick-button">
+                    <img src="{{ url_for('static', filename='button_down.svg') }}">
+                </div>
+                <div id="button-left" class="joystick-button">
+                    <img src="{{ url_for('static', filename='button_left.svg') }}">
+                </div>
+                <div id="button-right" class="joystick-button">
+                    <img src="{{ url_for('static', filename='button_right.svg') }}">
+                </div>
+            </div>
+            <div id="message-box">
+                <p id="message">Waiting for opponent...</p>
+            </div>
         </div>
         <script>
             var roomId = "{{ room_id }}"
             var username = "{{ username }}"
-            var stateImage = {{ state_image | safe }}
+            var state = {{ state | safe }}
         </script>
     </body>
 </html>

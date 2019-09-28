@@ -1,134 +1,116 @@
 * {
     box-sizing: border-box;
+    font-family: sans;
     margin: 0;
     padding: 0;
 }
 
-html {
-    background-color: #eee;
+body, html {
+    background-color: #2c3e50;
+    display: grid;
     height: 100%;
+    padding: 10px;
     width: 100%;
 }
 
-body {
+#container {
     background-color: #fff;
+    border-radius: 10px;
     display: grid;
-    grid-template-rows: 50px 100px calc(100vh - 150px);
+    height: 500px;
+    margin: auto;
+    max-width: 500px;
+    padding: 10px;
+    grid-gap: 10px;
+    grid-template-rows: auto 1fr;
+    width: 100%;
 }
 
-@media only screen and (min-width: 600px) {
-    body {
-        margin: 0 auto;
-        width: 600px;
-    }
+#info {
+    color: #fff;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr;
 }
 
-.header {
-    background-color: #333;
-    height: 50px;
+#info .infobox {
+    background-color: #3498db;
+    border-radius: 10px;
+    padding: 10px;
     text-align: center;
 }
 
-.header img {
-    margin: 10px;
-    height: 30px;
-}
-
-.info {
-    color: #fff;
-    display: grid;
-    font-family: sans;
-    grid-template-columns: 50% 50%;
-    padding: 30px 0;
-}
-
-.info div {
-    background-color: #555;
-    padding: 15px;
-    width: calc(100% - 15px);
-}
-
-.info .human-info {
-    background-color: #2ecc71;
-    border-radius: 0 10px 10px 0;
-}
-
-.info .robot-info {
-    background-color: #e74c3c;
-    border-radius: 10px 0 0 10px;
-    justify-self: end;
-    text-align: right;
-}
-
-.big {
-    font-size: 30px;
+#info .infobox .username {
+    font-size: 25px;
     font-weight: bold;
 }
 
-.container {
+#game {
     display: grid;
-    height: 100%;
     width: 100%;
 }
 
-.board {
+#game #board {
     margin: auto;
 }
 
-.overlay {
-    position: absolute;
-    background-color: #0003;
+#joystick {
+    background-color: #ecf0f155;
+    border: 1px solid #ecf0f188;
     border-radius: 50%;
-    bottom: 10px;
+    bottom: 30px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    right: 10px;
-    width: 150px;
     height: 150px;
-
+    position: absolute;
+    right: 30px;
+    width: 150px;
 }
 
-.overlay div {
+#joystick .joystick-button {
     height: 50px;
-    padding: 5px;
+    padding: 10px;
     width: 50px;
 }
 
-.overlay img {
-    height: 40px;
-    width: 40px;
+#joystick .joystick-button img {
+    height: 30px;
+    width: 30px;
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
 
-.overlay #button-up {
+#joystick #button-up {
     grid-row-start: 1;
     grid-column-start: 2;
 }
 
-.overlay #button-down {
+#joystick #button-down {
     grid-row: 3;
     grid-column: 2;
 }
 
-.overlay #button-left {
+#joystick #button-left {
     grid-row: 2;
     grid-column: 1;
 }
 
-.overlay #button-right {
+#joystick #button-right {
     grid-row: 2;
     grid-column: 3;
 }
 
-.overlay #button-interact {
+#joystick #button-interact {
     grid-row: 2;
     grid-column: 2;
 }
 
-@media only screen and (min-width: 600px) {
-    .overlay {
-        display: none;
-    }
+#message-box {
+    background-color: #7f8c8d;
+    border-radius: 5px;
+    bottom: 0;
+    color: #fff;
+    padding: 10px 20px;
 }
+

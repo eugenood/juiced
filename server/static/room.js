@@ -4,85 +4,118 @@ window.onload = function() {
     GRID_PADDING = 2
     BORDER_OFFSET = 4
 
-    function initializeRoom(stateImage) {
-        var board = document.getElementById('board')
-        board.setAttribute('width', stateImage[0].length * GRID_SIZE + BORDER_OFFSET)
-        board.setAttribute('height', stateImage.length * GRID_SIZE + BORDER_OFFSET)
-        window.addEventListener('keydown', act)
+    MESSAGE_WAIT = 'Waiting for your buddy...'
+    MESSAGE_ACT = 'Time to act!'
+
+    var socket = io.connect()
+    var canAct = false
+
+    document.getElementById('message').innerHTML = MESSAGE_WAIT
+
+    socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
+
+        document.getElementById('human-username').innerHTML = humanUsername
+        document.getElementById('robot-username').innerHTML = robotUsername
+
+        if (humanUsername !== null && robotUsername !== null) {
+
+            initializeRoom(state)
+            canAct = true
+            document.getElementById('message').innerHTML = MESSAGE_ACT
+
+        }
+
+    })
+
+    socket.on('state_changed' + roomId, function(state) {
+
+        drawBoard(JSON.parse(state))
+        canAct = true
+        document.getElementById('message').innerHTML = MESSAGE_ACT
+
+    })
+
+    socket.emit('user_entered', { room_id: roomId })
+
+    function initializeRoom(state) {
+
+        document.getElementById('board').setAttribute('height', state.length * GRID_SIZE + BORDER_OFFSET)
+        document.getElementById('board').setAttribute('width', state[0].length * GRID_SIZE + BORDER_OFFSET)
+
+        drawBoard(state)
+
+        window.addEventListener('keydown', function(event) {
+            if (event.keyCode == 38) moveUp()
+            if (event.keyCode == 40) moveDown()
+            if (event.keyCode == 37) moveLeft()
+            if (event.keyCode == 39) moveRight()
+            if (event.keyCode == 32) interact()
+        })
+
         document.getElementById('button-up').addEventListener('click', moveUp)
         document.getElementById('button-down').addEventListener('click', moveDown)
         document.getElementById('button-left').addEventListener('click', moveLeft)
         document.getElementById('button-right').addEventListener('click', moveRight)
         document.getElementById('button-interact').addEventListener('click', interact)
-        renderRoom(stateImage)
+
     }
 
-    function act(event) {
-        if (event.keyCode == 38) { moveUp() }
-        if (event.keyCode == 40) { moveDown() }
-        if (event.keyCode == 37) { moveLeft() }
-        if (event.keyCode == 39) { moveRight() }
-        if (event.keyCode == 32) { interact() }
-    }
+    function act(action) {
 
-    function moveUp() {
-        socket.emit('action_performed', { room_id: roomId, username: username, action: 0 })
-    }
+        if (canAct) {
 
-    function moveDown() {
-        socket.emit('action_performed', { room_id: roomId, username: username, action: 1 })
-    }
+            socket.emit('action_performed', { room_id: roomId, username: username, action: action })
+            canAct = false
+            document.getElementById('message').innerHTML = MESSAGE_WAIT
 
-    function moveLeft() {
-        socket.emit('action_performed', { room_id: roomId, username: username, action: 2 })
-    }
-
-    function moveRight() {
-        socket.emit('action_performed', { room_id: roomId, username: username, action: 3 })
-    }
-
-    function interact() {
-        socket.emit('action_performed', { room_id: roomId, username: username, action: 4 })
-    }
-
-    function renderRoom(stateImage) {
-        if (board.getContext) {
-            var context = board.getContext('2d')
-            for (var i = 0; i < stateImage.length; i++) {
-                for (var j = 0; j < stateImage[i].length; j++) {
-                    context.strokeRect(GRID_SIZE * j + GRID_PADDING,
-                                   GRID_SIZE * i + GRID_PADDING,
-                                   GRID_SIZE,
-                                   GRID_SIZE)
-                    var image = new Image()
-                    image.src = stateImage[i][j]
-                    image.onload = makeClosure(i, j, image, context)
-                }
-            }
         }
+
     }
 
-    function makeClosure(i, j, image, context) {
+    function moveUp()    { act(0) }
+
+    function moveDown()  { act(1) }
+
+    function moveLeft()  { act(2) }
+
+    function moveRight() { act(3) }
+
+    function interact()  { act(4) }
+
+    function drawBoard(state) {
+
+        var context = board.getContext('2d')
+
+        for (var i = 0; i < state.length; i++)
+            for (var j = 0; j < state[i].length; j++)
+                drawCell(i, j, state[i][j], context)
+
+    }
+
+    function drawCell(i, j, imageUrl, context) {
+
+        var image = new Image()
+        image.src = imageUrl
+        image.onload = onImageLoad(i, j, image, context)
+
+    }
+
+    function onImageLoad(i, j, image, context) {
+
         return function() {
+
+            context.strokeRect(GRID_SIZE * j + GRID_PADDING,
+                               GRID_SIZE * i + GRID_PADDING,
+                               GRID_SIZE,
+                               GRID_SIZE)
+
             context.drawImage(image, GRID_SIZE * j + (GRID_PADDING * 2),
                                      GRID_SIZE * i + (GRID_PADDING * 2),
                                      GRID_SIZE - (GRID_PADDING * 2),
                                      GRID_SIZE - (GRID_PADDING * 2))
+
         }
+
     }
-
-    var socket = io.connect()
-
-    socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
-        document.getElementById('human-username').innerHTML = humanUsername
-        document.getElementById('robot-username').innerHTML = robotUsername
-    })
-
-    socket.on('state_changed' + roomId, function(stateImage) {
-        renderRoom(JSON.parse(stateImage))
-    })
-
-    initializeRoom(stateImage)
-    socket.emit('user_entered', { room_id: roomId })
 
 }
