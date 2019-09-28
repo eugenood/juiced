@@ -1,5 +1,3 @@
-import numpy as np
-
 from juiced.character import Human, Robot
 from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Wall
 from juiced.metadata import Metadata
@@ -67,7 +65,7 @@ class Stage:
 
     def get_state(self):
 
-        state = np.zeros((self.height, self.width), dtype=np.int8)
+        state = [[None for _ in range(self.width)] for _ in range(self.height)]
 
         for x in range(self.height):
             for y in range(self.width):

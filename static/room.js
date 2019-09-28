@@ -27,27 +27,27 @@ window.onload = function() {
 
     function moveUp() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 0 })
-        document.getElementById('popup').style.display = 'block';
+        document.getElementById('message').innerHTML = 'Waiting for opponent...'
     }
 
     function moveDown() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 1 })
-        document.getElementById('popup').style.display = 'block';
+        document.getElementById('message').innerHTML = 'Waiting for opponent...'
     }
 
     function moveLeft() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 2 })
-        document.getElementById('popup').style.display = 'block';
+        document.getElementById('message').innerHTML = 'Waiting for opponent...'
     }
 
     function moveRight() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 3 })
-        document.getElementById('popup').style.display = 'block';
+        document.getElementById('message').innerHTML = 'Waiting for opponent...'
     }
 
     function interact() {
         socket.emit('action_performed', { room_id: roomId, username: username, action: 4 })
-        document.getElementById('popup').style.display = 'block';
+        document.getElementById('message').innerHTML = 'Waiting for opponent...'
     }
 
     function renderRoom(stateImage) {
@@ -81,11 +81,14 @@ window.onload = function() {
     socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
         document.getElementById('human-username').innerHTML = humanUsername
         document.getElementById('robot-username').innerHTML = robotUsername
+        if (humanUsername !== null && robotUsername !== null) {
+            document.getElementById('message').innerHTML= 'Time to move!'
+        }
     })
 
     socket.on('state_changed' + roomId, function(stateImage) {
         renderRoom(JSON.parse(stateImage))
-        document.getElementById('popup').style.display = 'none';
+        document.getElementById('message').innerHTML= 'Time to move!'
     })
 
     initializeRoom(stateImage)
