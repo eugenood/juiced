@@ -1,5 +1,5 @@
 from juiced.character import Human, Robot
-from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Wall
+from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Table, Wall
 from juiced.metadata import Metadata
 
 
@@ -89,6 +89,9 @@ class Stage:
 
         for wall_position in configuration["walls"]:
             self.add(Wall(), wall_position[0], wall_position[1])
+
+        for table_position in configuration["tables"]:
+            self.add(Table(), table_position[0], table_position[1])
 
         for cup_position in configuration["cups"]:
             self.add(Cup(), cup_position[0], cup_position[1])

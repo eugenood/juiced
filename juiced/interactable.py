@@ -7,6 +7,25 @@ class Interactable: pass
 class Wall(Interactable): pass
 
 
+class Table(Interactable):
+
+    def __init__(self):
+
+        self.filling = None
+
+    def interact(self, interactor):
+
+        if self.filling is None and interactor.carriage is not None:
+
+            self.filling = interactor.carriage
+            interactor.carriage = None
+
+        elif self.filling is not None and interactor.carriage is None:
+
+            interactor.carriage = self.filling
+            self.filling = None
+
+
 class AppleStorage(Interactable):
 
     def __init__(self):
