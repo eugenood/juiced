@@ -9,11 +9,12 @@ class Character:
     DIRECTION_LEFT = 2
     DIRECTION_RIGHT = 3
 
-    ACTION_UP = 0
-    ACTION_DOWN = 1
-    ACTION_LEFT = 2
-    ACTION_RIGHT = 3
-    ACTION_INTERACT = 4
+    ACTION_NONE = 0
+    ACTION_UP = 1
+    ACTION_DOWN = 2
+    ACTION_LEFT = 3
+    ACTION_RIGHT = 4
+    ACTION_INTERACT = 5
 
     def __init__(self, stage):
 

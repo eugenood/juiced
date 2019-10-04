@@ -1,9 +1,7 @@
-from random import randint
-
 from flask import Flask, json, redirect, render_template, request, send_from_directory, url_for
 from flask_socketio import SocketIO
 
-from juiced.configuration import config_smallworld, config_bigworld
+from juiced.configuration import config_bigworld
 from server.room import Room
 
 
@@ -23,7 +21,7 @@ def login():
     username = request.form.get("username")
     room_id = request.form.get("room_id")
     if room_id not in rooms:
-        rooms[room_id] = Room(room_id, config_smallworld)
+        rooms[room_id] = Room(room_id, config_bigworld)
     elif rooms[room_id].is_full():
         return "Room is full"
     rooms[room_id].add_player(username)
@@ -59,15 +57,13 @@ def handle_action_performed(req):
     room_id = req["room_id"]
     username = req["username"]
     action = req["action"]
-    is_action_made = False
     if username == rooms[room_id].human_username:
-        is_action_made = rooms[room_id].human_act(action)
+        rooms[room_id].human_act(action)
     elif username == rooms[room_id].robot_username:
-        is_action_made = rooms[room_id].robot_act(action)
-    if is_action_made:
-        state = json.dumps(rooms[room_id].get_state(in_url=True))
-        rooms[room_id].dump_history()
-        socket.emit('state_changed' + room_id, state)
+        rooms[room_id].robot_act(action)
+    state = json.dumps(rooms[room_id].get_state(in_url=True))
+    rooms[room_id].dump_history()
+    socket.emit('state_changed' + room_id, state)
 
 
 if __name__ == '__main__':

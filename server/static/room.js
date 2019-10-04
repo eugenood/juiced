@@ -28,11 +28,7 @@ window.onload = function() {
     })
 
     socket.on('state_changed' + roomId, function(state) {
-
         drawBoard(JSON.parse(state))
-        canAct = true
-        document.getElementById('message').innerHTML = MESSAGE_ACT
-
     })
 
     socket.emit('user_entered', { room_id: roomId })
@@ -63,24 +59,20 @@ window.onload = function() {
     function act(action) {
 
         if (canAct) {
-
             socket.emit('action_performed', { room_id: roomId, username: username, action: action })
-            canAct = false
-            document.getElementById('message').innerHTML = MESSAGE_WAIT
-
         }
 
     }
 
-    function moveUp()    { act(0) }
+    function moveUp()    { act(1) }
 
-    function moveDown()  { act(1) }
+    function moveDown()  { act(2) }
 
-    function moveLeft()  { act(2) }
+    function moveLeft()  { act(3) }
 
-    function moveRight() { act(3) }
+    function moveRight() { act(4) }
 
-    function interact()  { act(4) }
+    function interact()  { act(5) }
 
     function drawBoard(state) {
 

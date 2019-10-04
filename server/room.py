@@ -1,6 +1,7 @@
 import json
 import os
 
+from juiced.character import Character
 from juiced.stage import Stage
 
 
@@ -19,9 +20,6 @@ class Room:
         self.human_actions = []
         self.robot_actions = []
 
-        self.human_action = None
-        self.robot_action = None
-
     def add_player(self, username):
 
         if self.human_username is None:
@@ -32,17 +30,11 @@ class Room:
 
     def human_act(self, human_action):
 
-        if self.human_action is None:
-            self.human_action = human_action
-        
-        return self._act()
+        self._act(human_action, Character.ACTION_NONE)
 
     def robot_act(self, robot_action):
-
-        if self.robot_action is None:
-            self.robot_action = robot_action
         
-        return self._act()
+        self._act(Character.ACTION_NONE, robot_action)
 
     def get_state(self, in_url=False):
 
@@ -81,19 +73,10 @@ class Room:
         trajectory_file.write(json.dumps(history))
         trajectory_file.close()
 
+    def _act(self, human_action, robot_action):
 
-    def _act(self):
+        self.stage.human.act(human_action)
+        self.stage.robot.act(robot_action)
 
-        if self.human_action is None or self.robot_action is None:
-            return False
-
-        self.stage.human.act(self.human_action)
-        self.stage.robot.act(self.robot_action)
-
-        self.human_actions.append(self.human_action)
-        self.robot_actions.append(self.robot_action)
-        
-        self.human_action = None
-        self.robot_action = None
-
-        return True
+        self.human_actions.append(human_action)
+        self.robot_actions.append(robot_action)
