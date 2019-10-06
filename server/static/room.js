@@ -4,13 +4,10 @@ window.onload = function() {
     GRID_PADDING = 2
     BORDER_OFFSET = 4
 
-    MESSAGE_WAIT = 'Waiting for your buddy...'
     MESSAGE_ACT = 'Time to act!'
 
     var socket = io.connect()
-    var canAct = false
-
-    document.getElementById('message').innerHTML = MESSAGE_WAIT
+    var isInitialized = false
 
     socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
 
@@ -18,11 +15,9 @@ window.onload = function() {
         document.getElementById('robot-username').innerHTML = robotUsername
 
         if (humanUsername !== null && robotUsername !== null) {
-
-            initializeRoom(state)
-            canAct = true
-            document.getElementById('message').innerHTML = MESSAGE_ACT
-
+            if (!isInitialized) {
+                initializeRoom(state)
+            }
         }
 
     })
@@ -40,7 +35,7 @@ window.onload = function() {
 
         drawBoard(state)
 
-        window.addEventListener('keydown', function(event) {
+        window.addEventListener('keyup', function(event) {
             if (event.keyCode == 38) moveUp()
             if (event.keyCode == 40) moveDown()
             if (event.keyCode == 37) moveLeft()
@@ -54,24 +49,19 @@ window.onload = function() {
         document.getElementById('button-right').addEventListener('click', moveRight)
         document.getElementById('button-interact').addEventListener('click', interact)
 
+        isInitialized = true
+        document.getElementById('message').innerHTML = 'Time to get juicy!'
+
     }
 
     function act(action) {
-
-        if (canAct) {
-            socket.emit('action_performed', { room_id: roomId, username: username, action: action })
-        }
-
+        socket.emit('action_performed', { room_id: roomId, username: username, action: action })
     }
 
     function moveUp()    { act(1) }
-
     function moveDown()  { act(2) }
-
     function moveLeft()  { act(3) }
-
     function moveRight() { act(4) }
-
     function interact()  { act(5) }
 
     function drawBoard(state) {
