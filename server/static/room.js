@@ -9,10 +9,14 @@ window.onload = function() {
     var socket = io.connect()
     var isInitialized = false
 
+    var isHuman = true;
+
     socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
 
         document.getElementById('human-username').innerHTML = humanUsername
         document.getElementById('robot-username').innerHTML = robotUsername
+
+        isHuman = humanUsername === username
 
         if (humanUsername !== null && robotUsername !== null) {
             if (!isInitialized) {
@@ -22,8 +26,14 @@ window.onload = function() {
 
     })
 
-    socket.on('state_changed' + roomId, function(state) {
+    socket.on('state_changed' + roomId, function(state, reward) {
+
         drawBoard(JSON.parse(state))
+
+        if (isHuman) {
+            document.getElementById('message').innerHTML = 'Your reward is ' + reward
+        }
+
     })
 
     socket.emit('user_entered', { room_id: roomId })

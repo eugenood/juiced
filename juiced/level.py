@@ -1,3 +1,4 @@
+from juiced.carriable import Cup
 from juiced.metadata import Metadata
 
 
@@ -56,6 +57,10 @@ class Level(object):
         self.apple_storage_locations = apple_storage_locations
         self.orange_storage_locations = orange_storage_locations
 
+    def get_reward(self, stage):
+
+        return 0
+
     def to_dict(self):
 
         return {
@@ -83,6 +88,10 @@ class SmallWorld(Level):
                          apple_storage_locations=[((1, 1), (2, 2))],
                          orange_storage_locations=[((1, 2), (2, 1))])
 
+    def get_reward(self, stage):
+
+        return 0
+
 
 class BigWorld(Level):
 
@@ -97,6 +106,10 @@ class BigWorld(Level):
                          apple_storage_locations=[((3, 0), (5, 0)), ((3, 3), (5, 3))],
                          orange_storage_locations=[((3, 9), (5, 9)), ((5, 6), (3, 6))])
 
+    def get_reward(self, stage):
+
+        return 0
+
 
 class CoopWorld(Level):
 
@@ -105,9 +118,25 @@ class CoopWorld(Level):
         super().__init__(stage_size=(9, 9),
                          human_location=(2, 5),
                          robot_location=(7, 5),
-                         wall_locations=[(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8),],
+                         wall_locations=[(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8)],
                          table_locations=[(4, 3), (4, 4), (4, 5)],
                          cup_locations=[(0, 0), (1, 0), (2, 0)],
                          juicer_locations=[(7, 0), (8, 0), (9, 0)],
                          apple_storage_locations=[((0, 8), (1, 8))],
                          orange_storage_locations=[((0, 5), (1, 5))])
+
+        self.has_rewarded = False
+
+    def get_reward(self, stage):
+
+        if self.has_rewarded:
+            return 0
+
+        entity = stage.get(0, 0)
+
+        if isinstance(entity, Cup) and entity.filling == Cup.FILLING_APPLEJUICE:
+            self.has_rewarded = True
+            return 1
+
+        else:
+            return 0

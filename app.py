@@ -65,8 +65,9 @@ def handle_action_performed(req):
     elif username == rooms[room_id].robot_username:
         rooms[room_id].robot_act(action)
     state = json.dumps(rooms[room_id].get_state(in_url=True))
+    reward = rooms[room_id].get_reward()
     rooms[room_id].dump_history()
-    socket.emit('state_changed' + room_id, state)
+    socket.emit('state_changed' + room_id, data=(state, reward))
 
 
 if __name__ == '__main__':
