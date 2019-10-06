@@ -7,12 +7,12 @@ from juiced.stage import Stage
 
 class Room:
 
-    def __init__(self, room_id, configuration):
+    def __init__(self, room_id, level):
         
         self.room_id = room_id
-        self.configuration = configuration
+        self.level = level
 
-        self.stage = Stage(configuration)
+        self.stage = Stage(level)
         
         self.human_username = None
         self.robot_username = None
@@ -60,7 +60,7 @@ class Room:
             "room_id": self.room_id,
             "human_username": self.human_username,
             "robot_username": self.robot_username,
-            "configuration": self.configuration,
+            "level": self.level.to_dict(),
             "human_actions": self.human_actions,
             "robot_actions": self.robot_actions
 

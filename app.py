@@ -1,7 +1,7 @@
 from flask import Flask, json, redirect, render_template, request, send_from_directory, url_for
 from flask_socketio import SocketIO
 
-from juiced.configuration import config_coopworld
+from juiced.level import Level
 from server.room import Room
 
 
@@ -21,7 +21,10 @@ def login():
     username = request.form.get("username")
     room_id = request.form.get("room_id")
     if room_id not in rooms:
-        rooms[room_id] = Room(room_id, config_coopworld)
+        level_id = "small"
+        if len(room_id.split(".")) == 2:
+            level_id = room_id.split(".")[1]
+        rooms[room_id] = Room(room_id, Level.get_level(level_id))
     elif rooms[room_id].is_full():
         return "Room is full"
     rooms[room_id].add_player(username)
