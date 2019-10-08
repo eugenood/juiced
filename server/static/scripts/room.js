@@ -101,6 +101,7 @@ window.onload = function() {
 
             for (var j = 0; j < state[i].length; j++) {
 
+                context.drawImage(assets[0], GRID_SIZE * j, GRID_SIZE * i, GRID_SIZE, GRID_SIZE)
                 context.drawImage(assets[state[i][j]], GRID_SIZE * j, GRID_SIZE * i, GRID_SIZE, GRID_SIZE)
 
             }

@@ -51,6 +51,7 @@ body, html {
 }
 
 #game #board {
+    border: 3px solid #888;
     margin: auto;
 }
 
