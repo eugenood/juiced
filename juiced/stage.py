@@ -1,6 +1,5 @@
 from juiced.character import Human, Robot
 from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Table, Wall
-from juiced.level import Level
 from juiced.metadata import Metadata
 
 
@@ -8,12 +7,10 @@ class Stage:
 
     def __init__(self, level):
 
-        assert(isinstance(level, Level))
-
         self.level = level
 
-        self.height = self.level.stage_size[0]
-        self.width = self.level.stage_size[1]
+        self.height = self.level["stage_size"][0]
+        self.width = self.level["stage_size"][1]
 
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.metadata = Metadata()
@@ -87,24 +84,24 @@ class Stage:
         self.human = Human(self)
         self.robot = Robot(self)
 
-        self.add(self.human, self.level.human_location[0], self.level.human_location[1])
-        self.add(self.robot, self.level.robot_location[0], self.level.robot_location[1])
+        self.add(self.human, self.level["human_location"][0], self.level["human_location"][1])
+        self.add(self.robot, self.level["robot_location"][0], self.level["robot_location"][1])
 
     def _initialize_entities(self):
 
-        for wall_position in self.level.wall_locations:
+        for wall_position in self.level["wall_locations"]:
             self.add(Wall(), wall_position[0], wall_position[1])
 
-        for table_position in self.level.table_locations:
+        for table_position in self.level["table_locations"]:
             self.add(Table(), table_position[0], table_position[1])
 
-        for cup_position in self.level.cup_locations:
+        for cup_position in self.level["cup_locations"]:
             self.add(Cup(), cup_position[0], cup_position[1])
 
-        for juicer_position in self.level.juicer_locations:
+        for juicer_position in self.level["juicer_locations"]:
             self.add(Juicer(), juicer_position[0], juicer_position[1])
 
-        for apple_storage_position, apple_storage_button_position in self.level.apple_storage_locations:
+        for apple_storage_position, apple_storage_button_position in self.level["apple_storage_locations"]:
 
             apple_storage = AppleStorage()
             apple_storage_button = StorageButton(apple_storage)
@@ -112,7 +109,7 @@ class Stage:
             self.add(apple_storage, apple_storage_position[0], apple_storage_position[1])
             self.add(apple_storage_button, apple_storage_button_position[0], apple_storage_button_position[1])
 
-        for orange_storage_position, orange_storage_button_position in self.level.orange_storage_locations:
+        for orange_storage_position, orange_storage_button_position in self.level["orange_storage_locations"]:
 
             orange_storage = OrangeStorage()
             orange_storage_button = StorageButton(orange_storage)

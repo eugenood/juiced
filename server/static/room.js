@@ -26,13 +26,9 @@ window.onload = function() {
 
     })
 
-    socket.on('state_changed' + roomId, function(state, reward) {
+    socket.on('state_changed' + roomId, function(state) {
 
         drawBoard(JSON.parse(state))
-
-        if (isHuman) {
-            document.getElementById('message').innerHTML = 'Your reward is ' + reward
-        }
 
     })
 

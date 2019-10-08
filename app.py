@@ -24,7 +24,7 @@ def login():
         level_id = "small"
         if len(room_id.split(".")) == 2:
             level_id = room_id.split(".")[1]
-        rooms[room_id] = Room(room_id, Level.get_level(level_id))
+        rooms[room_id] = Room(room_id, Level.create(level_id))
     elif rooms[room_id].is_full():
         return "Room is full"
     rooms[room_id].add_player(username)
@@ -65,9 +65,8 @@ def handle_action_performed(req):
     elif username == rooms[room_id].robot_username:
         rooms[room_id].robot_act(action)
     state = json.dumps(rooms[room_id].get_state(in_url=True))
-    reward = rooms[room_id].get_reward()
     rooms[room_id].dump_history()
-    socket.emit('state_changed' + room_id, data=(state, reward))
+    socket.emit('state_changed' + room_id, data=(state))
 
 
 if __name__ == '__main__':

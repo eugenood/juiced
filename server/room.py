@@ -20,8 +20,6 @@ class Room:
         self.human_actions = []
         self.robot_actions = []
 
-        self.rewards = []
-
     def add_player(self, username):
 
         if self.human_username is None:
@@ -51,10 +49,6 @@ class Room:
 
         return state
 
-    def get_reward(self):
-
-        return self.rewards[-1]
-
     def is_full(self):
 
         return self.human_username is not None and self.robot_username is not None
@@ -66,10 +60,9 @@ class Room:
             "room_id": self.room_id,
             "human_username": self.human_username,
             "robot_username": self.robot_username,
-            "level": self.level.to_dict(),
+            "level": self.level,
             "human_actions": self.human_actions,
             "robot_actions": self.robot_actions,
-            "rewards": self.rewards
 
         }
 
@@ -87,5 +80,3 @@ class Room:
 
         self.human_actions.append(human_action)
         self.robot_actions.append(robot_action)
-
-        self.rewards.append(self.level.get_reward(self.stage))
