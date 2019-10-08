@@ -6,7 +6,7 @@ from juiced.metadata import Metadata
 from server.room import Room
 
 
-app = Flask(__name__, static_folder='server/static', template_folder='server/templates')
+app = Flask(__name__, static_folder="server/static", template_folder="server/templates")
 socket = SocketIO(app)
 rooms = {}
 
@@ -17,10 +17,10 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/assets/<path:path>')
+@app.route("/assets/<path:path>")
 def assets(path):
 
-    return send_from_directory('juiced/assets', path)
+    return send_from_directory("juiced/assets", path)
 
 
 @app.route("/login", methods=["POST"])
@@ -59,7 +59,7 @@ def room(room_id, username):
     return render_template("room.html", room_id=room_id, username=username)
 
 
-@socket.on('user_entered')
+@socket.on("user_entered")
 def handle_user_entered(req):
 
     room_id = req["room_id"]
@@ -70,10 +70,10 @@ def handle_user_entered(req):
     state = room.get_state()
     assets_urls = list(map(lambda url : "/../../../assets/" + url, Metadata.urls))
 
-    socket.emit('user_changed:' + room_id, data=(human_username, robot_username, state, assets_urls))
+    socket.emit("user_changed:" + room_id, data=(human_username, robot_username, state, assets_urls))
 
 
-@socket.on('action_performed')
+@socket.on("action_performed")
 def handle_action_performed(req):
 
     room_id = req["room_id"]
@@ -88,8 +88,9 @@ def handle_action_performed(req):
 
     state = rooms[room_id].get_state()
     rooms[room_id].dump_history()
-    socket.emit('state_changed:' + room_id, data=state)
+    socket.emit("state_changed:" + room_id, data=state)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+
     socket.run(app, host="0.0.0.0")

@@ -3,13 +3,13 @@ class Level:
     @staticmethod
     def create(level_id):
 
-        if level_id == 'small':
+        if level_id == "small":
             return Level.SMALL
 
-        if level_id == 'large':
+        if level_id == "large":
             return Level.LARGE
 
-        if level_id == 'split':
+        if level_id == "split":
             return Level.SPLIT
 
         return Level.SMALL
@@ -51,7 +51,7 @@ class Level:
         "table_locations": [(4, 3), (4, 4), (4, 5)],
         "cup_locations": [(0, 0), (1, 0), (2, 0)],
         "juicer_locations": [(7, 0), (8, 0), (9, 0)],
-        "apple_storage_locations": [((0, 8), (1, 8))],
-        "orange_storage_locations": [((0, 5), (1, 5))]
+        "apple_storage_locations": [((0, 8), (0, 7))],
+        "orange_storage_locations": [((0, 5), (0, 4))]
 
     }
