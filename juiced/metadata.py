@@ -29,7 +29,6 @@ class Metadata:
 
         self.ground = Metadata.Entry("misc/ground.png")
         self.wall = Metadata.Entry("misc/wall.png")
-        self.table = Metadata.Entry("misc/table.png")
 
         self.apple = Metadata.Entry("fruit/apple.png")
         self.orange = Metadata.Entry("fruit/orange.png")
@@ -40,6 +39,24 @@ class Metadata:
             Cup.FILLING_APPLEJUICE: Metadata.Entry("cup/applejuice.png"),
             Cup.FILLING_ORANGEJUICE: Metadata.Entry("cup/orangejuice.png")
 
+        }
+        
+        self.table = {
+        
+            "default": Metadata.Entry("table/empty.png"),
+            
+            "apple": Metadata.Entry("table/apple.png"),
+            
+            "orange": Metadata.Entry("table/orange.png"),
+            
+            "cup": {
+                    
+                Cup.FILLING_EMPTY: Metadata.Entry("table/cup/empty.png"),
+                Cup.FILLING_APPLEJUICE: Metadata.Entry("table/cup/applejuice.png"),
+                Cup.FILLING_ORANGEJUICE: Metadata.Entry("table/cup/orangejuice.png")
+                
+            }
+        
         }
 
         self.juicer = {
@@ -207,10 +224,16 @@ class Metadata:
             return self.apple
 
         elif isinstance(entity, Table) and entity.filling is None:
-            return self.table
+            return self.table["default"]
 
-        elif isinstance(entity, Table) and entity.filling is not None:
-            return self[entity.filling]
+        elif isinstance(entity, Table) and isinstance(entity.filling, Apple):
+            return self.table["apple"]
+
+        elif isinstance(entity, Table) and isinstance(entity.filling, Orange):
+            return self.table["orange"]
+
+        elif isinstance(entity, Table) and isinstance(entity.filling, Cup):
+            return self.table["cup"][entity.filling.filling]
 
         elif isinstance(entity, Orange):
             return self.orange
