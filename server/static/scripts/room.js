@@ -1,106 +1,109 @@
 window.onload = function() {
 
     GRID_SIZE = 30
-    GRID_PADDING = 2
-    BORDER_OFFSET = 4
-
-    MESSAGE_ACT = 'Time to act!'
 
     var socket = io.connect()
     var isInitialized = false
 
-    var isHuman = true;
+    var assets = []
+    var numAssetsLoaded = 0
 
-    socket.on('user_changed' + roomId, function(humanUsername, robotUsername) {
+    socket.emit("user_entered", { room_id: roomId })
 
-        document.getElementById('human-username').innerHTML = humanUsername
-        document.getElementById('robot-username').innerHTML = robotUsername
+    socket.on("user_changed:" + roomId, function(humanUsername, robotUsername, state, assetsUrls) {
 
-        isHuman = humanUsername === username
+        if (isInitialized) return;
 
-        if (humanUsername !== null && robotUsername !== null) {
-            if (!isInitialized) {
-                initializeRoom(state)
-            }
-        }
+        document.getElementById("human-username").innerHTML = humanUsername
+        document.getElementById("robot-username").innerHTML = robotUsername
 
-    })
-
-    socket.on('state_changed' + roomId, function(state) {
-
-        drawBoard(JSON.parse(state))
+        if (humanUsername !== null && robotUsername !== null) initializeRoom(state, assetsUrls)
 
     })
 
-    socket.emit('user_entered', { room_id: roomId })
-
-    function initializeRoom(state) {
-
-        document.getElementById('board').setAttribute('height', state.length * GRID_SIZE + BORDER_OFFSET)
-        document.getElementById('board').setAttribute('width', state[0].length * GRID_SIZE + BORDER_OFFSET)
+    socket.on("state_changed:" + roomId, function(state) {
 
         drawBoard(state)
 
-        window.addEventListener('keyup', function(event) {
-            if (event.keyCode == 38) moveUp()
-            if (event.keyCode == 40) moveDown()
-            if (event.keyCode == 37) moveLeft()
-            if (event.keyCode == 39) moveRight()
-            if (event.keyCode == 32) interact()
-        })
+    })
 
-        document.getElementById('button-up').addEventListener('click', moveUp)
-        document.getElementById('button-down').addEventListener('click', moveDown)
-        document.getElementById('button-left').addEventListener('click', moveLeft)
-        document.getElementById('button-right').addEventListener('click', moveRight)
-        document.getElementById('button-interact').addEventListener('click', interact)
+    function initializeRoom(state, assetsUrls) {
+
+        initializeBoard(state, assetsUrls)
+        initializeEvents()
+
+        var board = document.getElementById("board")
+        board.setAttribute("width", state[0].length * GRID_SIZE)
+        board.setAttribute("height", state.length * GRID_SIZE)
 
         isInitialized = true
-        document.getElementById('message').innerHTML = 'Time to get juicy!'
+        document.getElementById("message").innerHTML = "Time to get juicy!"
+
+    }
+
+    function initializeBoard(state, assetsUrls) {
+
+        function createClosure(i, image) {
+
+            return function() {
+
+                assets[i] = image
+                numAssetsLoaded = numAssetsLoaded + 1
+
+                if (numAssetsLoaded === assetsUrls.length) { drawBoard(state) }
+
+            }
+
+        }
+
+        for (var i = 0; i < assetsUrls.length; i++) {
+
+            var image = new Image()
+            image.src = assetsUrls[i]
+            image.onload = createClosure(i, image)
+
+        }
+
+    }
+
+    function initializeEvents() {
+
+        window.addEventListener("keyup", function(event) {
+
+            if (event.keyCode == 38) act("up")
+            if (event.keyCode == 40) act("down")
+            if (event.keyCode == 37) act("left")
+            if (event.keyCode == 39) act("right")
+            if (event.keyCode == 32) act("interact")
+
+        })
+
+        document.getElementById("button-up").addEventListener("click", function() { act("up") })
+        document.getElementById("button-down").addEventListener("click", function() { act("down") })
+        document.getElementById("button-left").addEventListener("click", function() { act("left") })
+        document.getElementById("button-right").addEventListener("click", function() { act("right") })
+        document.getElementById("button-interact").addEventListener("click", function() { act("interact") })
 
     }
 
     function act(action) {
-        socket.emit('action_performed', { room_id: roomId, username: username, action: action })
-    }
 
-    function moveUp()    { act(1) }
-    function moveDown()  { act(2) }
-    function moveLeft()  { act(3) }
-    function moveRight() { act(4) }
-    function interact()  { act(5) }
+        var action_mapping = { "up": 1, "down": 2, "left": 3, "right": 4, "interact": 5 }
+        socket.emit("action_performed", { room_id: roomId, username: username, action: action_mapping[action] })
+
+    }
 
     function drawBoard(state) {
 
-        var context = board.getContext('2d')
+        var context = document.getElementById("board").getContext("2d")
 
-        for (var i = 0; i < state.length; i++)
-            for (var j = 0; j < state[i].length; j++)
-                drawCell(i, j, state[i][j], context)
+        for (var i = 0; i < state.length; i++) {
 
-    }
+            for (var j = 0; j < state[i].length; j++) {
 
-    function drawCell(i, j, imageUrl, context) {
+                context.drawImage(assets[state[i][j]], GRID_SIZE * j, GRID_SIZE * i, GRID_SIZE, GRID_SIZE)
 
-        var image = new Image()
-        image.src = imageUrl
-        image.onload = onImageLoad(i, j, image, context)
-
-    }
-
-    function onImageLoad(i, j, image, context) {
-
-        return function() {
-
-            context.strokeRect(GRID_SIZE * j + GRID_PADDING,
-                               GRID_SIZE * i + GRID_PADDING,
-                               GRID_SIZE,
-                               GRID_SIZE)
-
-            context.drawImage(image, GRID_SIZE * j + (GRID_PADDING * 2),
-                                     GRID_SIZE * i + (GRID_PADDING * 2),
-                                     GRID_SIZE - (GRID_PADDING * 2),
-                                     GRID_SIZE - (GRID_PADDING * 2))
+            }
 
         }
 

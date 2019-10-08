@@ -36,18 +36,9 @@ class Room:
         
         self._act(Character.ACTION_NONE, robot_action)
 
-    def get_state(self, in_url=False):
+    def get_state(self):
 
-        state = self.stage.get_state(in_url)
-
-        if not in_url:
-            return state
-
-        for i in range(len(state)):
-            for j in range(len(state[i])):
-                state[i][j] = "../../assets/" + state[i][j]
-
-        return state
+        return self.stage.get_state()
 
     def is_full(self):
 

@@ -13,7 +13,7 @@ class Stage:
         self.width = self.level["stage_size"][1]
 
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
-        self.metadata = Metadata()
+        self.metadata = Metadata.get_instance()
 
         self._initialize_characters()
         self._initialize_entities()
@@ -65,17 +65,14 @@ class Stage:
 
         return -1, -1
 
-    def get_state(self, in_url=False):
+    def get_state(self):
 
         state = [[None for _ in range(self.width)] for _ in range(self.height)]
 
         for x in range(self.height):
             for y in range(self.width):
                 item = self.get(x, y)
-                if not in_url:
-                    state[x][y] = self.metadata[item].index
-                else:
-                    state[x][y] = self.metadata[item].url
+                state[x][y] = self.metadata[item].index
 
         return state
 

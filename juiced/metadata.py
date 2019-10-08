@@ -3,92 +3,100 @@ from juiced.character import Character, Human, Robot
 from juiced.interactable import AppleStorage, Juicer, OrangeStorage, StorageButton, Wall, Table
 
 
-class MetadataEntry:
-
-    _max_index = 0
-
-    def __init__(self, url):
-
-        MetadataEntry._max_index = MetadataEntry._max_index + 1
-
-        self.index = MetadataEntry._max_index
-        self.url = url
-
-
 class Metadata:
+
+    urls = []
+    instance = None
+
+    class Entry:
+
+        def __init__(self, url):
+
+            self.index = len(Metadata.urls)
+            self.url = url
+
+            Metadata.urls.append(url)
+
+    @staticmethod
+    def get_instance():
+
+        if Metadata.instance is None:
+            Metadata.instance = Metadata()
+
+        return Metadata.instance
 
     def __init__(self):
 
-        self.meta_ground = MetadataEntry("misc/ground.png")
-        self.meta_wall = MetadataEntry("misc/wall.png")
-        self.meta_table = MetadataEntry("misc/table.png")
+        self.ground = Metadata.Entry("misc/ground.png")
+        self.wall = Metadata.Entry("misc/wall.png")
+        self.table = Metadata.Entry("misc/table.png")
 
-        self.meta_apple = MetadataEntry("fruit/apple.png")
-        self.meta_orange = MetadataEntry("fruit/orange.png")
+        self.apple = Metadata.Entry("fruit/apple.png")
+        self.orange = Metadata.Entry("fruit/orange.png")
 
-        self.meta_cup = {
+        self.cup = {
 
-            Cup.FILLING_EMPTY: MetadataEntry("cup/empty.png"),
-            Cup.FILLING_APPLEJUICE: MetadataEntry("cup/applejuice.png"),
-            Cup.FILLING_ORANGEJUICE: MetadataEntry("cup/orangejuice.png")
-
-        }
-
-        self.meta_juicer = {
-
-            Juicer.FILLING_EMPTY: MetadataEntry("juicer/empty.png"),
-            Juicer.FILLING_APPLEJUICE: MetadataEntry("juicer/applejuice.png"),
-            Juicer.FILLING_ORANGEJUICE: MetadataEntry("juicer/orangejuice.png")
+            Cup.FILLING_EMPTY: Metadata.Entry("cup/empty.png"),
+            Cup.FILLING_APPLEJUICE: Metadata.Entry("cup/applejuice.png"),
+            Cup.FILLING_ORANGEJUICE: Metadata.Entry("cup/orangejuice.png")
 
         }
 
-        self.meta_apple_storage = {
-                
-            False: MetadataEntry("storage/apple/closed.png"),
-            True: MetadataEntry("storage/apple/opened.png")
+        self.juicer = {
+
+            Juicer.FILLING_EMPTY: Metadata.Entry("juicer/empty.png"),
+            Juicer.FILLING_APPLEJUICE: Metadata.Entry("juicer/applejuice.png"),
+            Juicer.FILLING_ORANGEJUICE: Metadata.Entry("juicer/orangejuice.png")
 
         }
 
-        self.meta_orange_storage = {
+        self.apple_storage = {
 
-            False: MetadataEntry("storage/orange/closed.png"),
-            True: MetadataEntry("storage/orange/opened.png")
-
-        }
-
-        self.meta_storage_button = {
-
-            AppleStorage: MetadataEntry("storage/apple/button.png"),
-            OrangeStorage: MetadataEntry("storage/orange/button.png")
+            False: Metadata.Entry("storage/apple/closed.png"),
+            True: Metadata.Entry("storage/apple/opened.png")
 
         }
 
-        self.meta_human = {
+        self.orange_storage = {
+
+            False: Metadata.Entry("storage/orange/closed.png"),
+            True: Metadata.Entry("storage/orange/opened.png")
+
+        }
+
+        self.storage_button = {
+
+            AppleStorage: Metadata.Entry("storage/apple/button.png"),
+            OrangeStorage: Metadata.Entry("storage/orange/button.png")
+
+        }
+
+        self.human = {
 
             "default": {
 
-                Character.DIRECTION_UP: MetadataEntry("human/default/up.png"),
-                Character.DIRECTION_DOWN: MetadataEntry("human/default/down.png"),
-                Character.DIRECTION_LEFT: MetadataEntry("human/default/left.png"),
-                Character.DIRECTION_RIGHT: MetadataEntry("human/default/right.png")
+                Character.DIRECTION_UP: Metadata.Entry("human/default/up.png"),
+                Character.DIRECTION_DOWN: Metadata.Entry("human/default/down.png"),
+                Character.DIRECTION_LEFT: Metadata.Entry("human/default/left.png"),
+                Character.DIRECTION_RIGHT: Metadata.Entry("human/default/right.png")
 
             },
 
             "apple": {
 
-                Character.DIRECTION_UP: MetadataEntry("human/apple/up.png"),
-                Character.DIRECTION_DOWN: MetadataEntry("human/apple/down.png"),
-                Character.DIRECTION_LEFT: MetadataEntry("human/apple/left.png"),
-                Character.DIRECTION_RIGHT: MetadataEntry("human/apple/right.png")
+                Character.DIRECTION_UP: Metadata.Entry("human/apple/up.png"),
+                Character.DIRECTION_DOWN: Metadata.Entry("human/apple/down.png"),
+                Character.DIRECTION_LEFT: Metadata.Entry("human/apple/left.png"),
+                Character.DIRECTION_RIGHT: Metadata.Entry("human/apple/right.png")
 
             },
 
             "orange": {
 
-                Character.DIRECTION_UP: MetadataEntry("human/orange/up.png"),
-                Character.DIRECTION_DOWN: MetadataEntry("human/orange/down.png"),
-                Character.DIRECTION_LEFT: MetadataEntry("human/orange/left.png"),
-                Character.DIRECTION_RIGHT: MetadataEntry("human/orange/right.png")
+                Character.DIRECTION_UP: Metadata.Entry("human/orange/up.png"),
+                Character.DIRECTION_DOWN: Metadata.Entry("human/orange/down.png"),
+                Character.DIRECTION_LEFT: Metadata.Entry("human/orange/left.png"),
+                Character.DIRECTION_RIGHT: Metadata.Entry("human/orange/right.png")
 
             },
 
@@ -96,28 +104,28 @@ class Metadata:
 
                 Cup.FILLING_EMPTY: {
 
-                    Character.DIRECTION_UP: MetadataEntry("human/cup/empty/up.png"),
-                    Character.DIRECTION_DOWN: MetadataEntry("human/cup/empty/down.png"),
-                    Character.DIRECTION_LEFT: MetadataEntry("human/cup/empty/left.png"),
-                    Character.DIRECTION_RIGHT: MetadataEntry("human/cup/empty/right.png")
+                    Character.DIRECTION_UP: Metadata.Entry("human/cup/empty/up.png"),
+                    Character.DIRECTION_DOWN: Metadata.Entry("human/cup/empty/down.png"),
+                    Character.DIRECTION_LEFT: Metadata.Entry("human/cup/empty/left.png"),
+                    Character.DIRECTION_RIGHT: Metadata.Entry("human/cup/empty/right.png")
 
                 },
 
                 Cup.FILLING_ORANGEJUICE: {
 
-                    Character.DIRECTION_UP: MetadataEntry("human/cup/orangejuice/up.png"),
-                    Character.DIRECTION_DOWN: MetadataEntry("human/cup/orangejuice/down.png"),
-                    Character.DIRECTION_LEFT: MetadataEntry("human/cup/orangejuice/left.png"),
-                    Character.DIRECTION_RIGHT: MetadataEntry("human/cup/orangejuice/right.png")
+                    Character.DIRECTION_UP: Metadata.Entry("human/cup/orangejuice/up.png"),
+                    Character.DIRECTION_DOWN: Metadata.Entry("human/cup/orangejuice/down.png"),
+                    Character.DIRECTION_LEFT: Metadata.Entry("human/cup/orangejuice/left.png"),
+                    Character.DIRECTION_RIGHT: Metadata.Entry("human/cup/orangejuice/right.png")
 
                 },
 
                 Cup.FILLING_APPLEJUICE: {
 
-                    Character.DIRECTION_UP: MetadataEntry("human/cup/applejuice/up.png"),
-                    Character.DIRECTION_DOWN: MetadataEntry("human/cup/applejuice/down.png"),
-                    Character.DIRECTION_LEFT: MetadataEntry("human/cup/applejuice/left.png"),
-                    Character.DIRECTION_RIGHT: MetadataEntry("human/cup/applejuice/right.png")
+                    Character.DIRECTION_UP: Metadata.Entry("human/cup/applejuice/up.png"),
+                    Character.DIRECTION_DOWN: Metadata.Entry("human/cup/applejuice/down.png"),
+                    Character.DIRECTION_LEFT: Metadata.Entry("human/cup/applejuice/left.png"),
+                    Character.DIRECTION_RIGHT: Metadata.Entry("human/cup/applejuice/right.png")
 
                 }
 
@@ -125,32 +133,32 @@ class Metadata:
 
         }
 
-        self.meta_robot = {
+        self.robot = {
 
             "default": {
 
-                Character.DIRECTION_UP: MetadataEntry("robot/default/up.png"),
-                Character.DIRECTION_DOWN: MetadataEntry("robot/default/down.png"),
-                Character.DIRECTION_LEFT: MetadataEntry("robot/default/left.png"),
-                Character.DIRECTION_RIGHT: MetadataEntry("robot/default/right.png")
+                Character.DIRECTION_UP: Metadata.Entry("robot/default/up.png"),
+                Character.DIRECTION_DOWN: Metadata.Entry("robot/default/down.png"),
+                Character.DIRECTION_LEFT: Metadata.Entry("robot/default/left.png"),
+                Character.DIRECTION_RIGHT: Metadata.Entry("robot/default/right.png")
 
             },
 
             "apple": {
 
-                Character.DIRECTION_UP: MetadataEntry("robot/apple/up.png"),
-                Character.DIRECTION_DOWN: MetadataEntry("robot/apple/down.png"),
-                Character.DIRECTION_LEFT: MetadataEntry("robot/apple/left.png"),
-                Character.DIRECTION_RIGHT: MetadataEntry("robot/apple/right.png")
+                Character.DIRECTION_UP: Metadata.Entry("robot/apple/up.png"),
+                Character.DIRECTION_DOWN: Metadata.Entry("robot/apple/down.png"),
+                Character.DIRECTION_LEFT: Metadata.Entry("robot/apple/left.png"),
+                Character.DIRECTION_RIGHT: Metadata.Entry("robot/apple/right.png")
 
             },
 
             "orange": {
 
-                Character.DIRECTION_UP: MetadataEntry("robot/orange/up.png"),
-                Character.DIRECTION_DOWN: MetadataEntry("robot/orange/down.png"),
-                Character.DIRECTION_LEFT: MetadataEntry("robot/orange/left.png"),
-                Character.DIRECTION_RIGHT: MetadataEntry("robot/orange/right.png")
+                Character.DIRECTION_UP: Metadata.Entry("robot/orange/up.png"),
+                Character.DIRECTION_DOWN: Metadata.Entry("robot/orange/down.png"),
+                Character.DIRECTION_LEFT: Metadata.Entry("robot/orange/left.png"),
+                Character.DIRECTION_RIGHT: Metadata.Entry("robot/orange/right.png")
 
             },
 
@@ -158,28 +166,28 @@ class Metadata:
 
                 Cup.FILLING_EMPTY: {
 
-                    Character.DIRECTION_UP: MetadataEntry("robot/cup/empty/up.png"),
-                    Character.DIRECTION_DOWN: MetadataEntry("robot/cup/empty/down.png"),
-                    Character.DIRECTION_LEFT: MetadataEntry("robot/cup/empty/left.png"),
-                    Character.DIRECTION_RIGHT: MetadataEntry("robot/cup/empty/right.png")
+                    Character.DIRECTION_UP: Metadata.Entry("robot/cup/empty/up.png"),
+                    Character.DIRECTION_DOWN: Metadata.Entry("robot/cup/empty/down.png"),
+                    Character.DIRECTION_LEFT: Metadata.Entry("robot/cup/empty/left.png"),
+                    Character.DIRECTION_RIGHT: Metadata.Entry("robot/cup/empty/right.png")
 
                 },
 
                 Cup.FILLING_ORANGEJUICE: {
 
-                    Character.DIRECTION_UP: MetadataEntry("robot/cup/orangejuice/up.png"),
-                    Character.DIRECTION_DOWN: MetadataEntry("robot/cup/orangejuice/down.png"),
-                    Character.DIRECTION_LEFT: MetadataEntry("robot/cup/orangejuice/left.png"),
-                    Character.DIRECTION_RIGHT: MetadataEntry("robot/cup/orangejuice/right.png")
+                    Character.DIRECTION_UP: Metadata.Entry("robot/cup/orangejuice/up.png"),
+                    Character.DIRECTION_DOWN: Metadata.Entry("robot/cup/orangejuice/down.png"),
+                    Character.DIRECTION_LEFT: Metadata.Entry("robot/cup/orangejuice/left.png"),
+                    Character.DIRECTION_RIGHT: Metadata.Entry("robot/cup/orangejuice/right.png")
 
                 },
 
                 Cup.FILLING_APPLEJUICE: {
 
-                    Character.DIRECTION_UP: MetadataEntry("robot/cup/applejuice/up.png"),
-                    Character.DIRECTION_DOWN: MetadataEntry("robot/cup/applejuice/down.png"),
-                    Character.DIRECTION_LEFT: MetadataEntry("robot/cup/applejuice/left.png"),
-                    Character.DIRECTION_RIGHT: MetadataEntry("robot/cup/applejuice/right.png")
+                    Character.DIRECTION_UP: Metadata.Entry("robot/cup/applejuice/up.png"),
+                    Character.DIRECTION_DOWN: Metadata.Entry("robot/cup/applejuice/down.png"),
+                    Character.DIRECTION_LEFT: Metadata.Entry("robot/cup/applejuice/left.png"),
+                    Character.DIRECTION_RIGHT: Metadata.Entry("robot/cup/applejuice/right.png")
 
                 }
 
@@ -190,58 +198,58 @@ class Metadata:
     def __getitem__(self, entity):
 
         if entity is None:
-            return self.meta_ground
+            return self.ground
 
         elif isinstance(entity, Wall):
-            return self.meta_wall
+            return self.wall
 
         elif isinstance(entity, Apple):
-            return self.meta_apple
+            return self.apple
 
         elif isinstance(entity, Table) and entity.filling is None:
-            return self.meta_table
+            return self.table
 
         elif isinstance(entity, Table) and entity.filling is not None:
             return self[entity.filling]
 
         elif isinstance(entity, Orange):
-            return self.meta_orange
+            return self.orange
 
         elif isinstance(entity, Cup):
-            return self.meta_cup[entity.filling]
+            return self.cup[entity.filling]
 
         elif isinstance(entity, Juicer):
-            return self.meta_juicer[entity.filling]
+            return self.juicer[entity.filling]
 
         elif isinstance(entity, AppleStorage):
-            return self.meta_apple_storage[entity.is_open]
+            return self.apple_storage[entity.is_open]
 
         elif isinstance(entity, OrangeStorage):
-            return self.meta_orange_storage[entity.is_open]
+            return self.orange_storage[entity.is_open]
 
         elif isinstance(entity, StorageButton):
-            return self.meta_storage_button[type(entity.storage)]
+            return self.storage_button[type(entity.storage)]
 
         elif isinstance(entity, Human) and entity.carriage is None:
-            return self.meta_human["default"][entity.direction]
+            return self.human["default"][entity.direction]
 
         elif isinstance(entity, Human) and isinstance(entity.carriage, Apple):
-            return self.meta_human["apple"][entity.direction]
+            return self.human["apple"][entity.direction]
 
         elif isinstance(entity, Human) and isinstance(entity.carriage, Orange):
-            return self.meta_human["orange"][entity.direction]
+            return self.human["orange"][entity.direction]
 
         elif isinstance(entity, Human) and isinstance(entity.carriage, Cup):
-            return self.meta_human["cup"][entity.carriage.filling][entity.direction]
+            return self.human["cup"][entity.carriage.filling][entity.direction]
 
         elif isinstance(entity, Robot) and entity.carriage is None:
-            return self.meta_robot["default"][entity.direction]
+            return self.robot["default"][entity.direction]
 
         elif isinstance(entity, Robot) and isinstance(entity.carriage, Apple):
-            return self.meta_robot["apple"][entity.direction]
+            return self.robot["apple"][entity.direction]
 
         elif isinstance(entity, Robot) and isinstance(entity.carriage, Orange):
-            return self.meta_robot["orange"][entity.direction]
+            return self.robot["orange"][entity.direction]
 
         elif isinstance(entity, Robot) and isinstance(entity.carriage, Cup):
-            return self.meta_robot["cup"][entity.carriage.filling][entity.direction]
+            return self.robot["cup"][entity.carriage.filling][entity.direction]

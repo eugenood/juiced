@@ -1,4 +1,4 @@
-class Level(object):
+class Level:
 
     @staticmethod
     def create(level_id):
