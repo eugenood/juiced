@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Trust Game</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='room.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/room.css') }}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-        <script src="{{ url_for('static', filename='room.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/room.js') }}"></script>
     </head>
     <body>
         <div id="container">
@@ -25,19 +25,19 @@
             </div>
             <div id="joystick">
                 <div id="button-interact" class="joystick-button">
-                    <img src="{{ url_for('static', filename='button_interact.png') }}">
+                    <img src="{{ url_for('static', filename='images/button_interact.png') }}">
                 </div>
                 <div id="button-up" class="joystick-button">
-                    <img src="{{ url_for('static', filename='button_up.png') }}">
+                    <img src="{{ url_for('static', filename='images/button_up.png') }}">
                 </div>
                 <div id="button-down" class="joystick-button">
-                    <img src="{{ url_for('static', filename='button_down.png') }}">
+                    <img src="{{ url_for('static', filename='images/button_down.png') }}">
                 </div>
                 <div id="button-left" class="joystick-button">
-                    <img src="{{ url_for('static', filename='button_left.png') }}">
+                    <img src="{{ url_for('static', filename='images/button_left.png') }}">
                 </div>
                 <div id="button-right" class="joystick-button">
-                    <img src="{{ url_for('static', filename='button_right.png') }}">
+                    <img src="{{ url_for('static', filename='images/button_right.png') }}">
                 </div>
             </div>
             <div id="message-box">
@@ -47,7 +47,6 @@
         <script>
             var roomId = "{{ room_id }}"
             var username = "{{ username }}"
-            var state = {{ state | safe }}
         </script>
     </body>
 </html>

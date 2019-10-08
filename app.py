@@ -40,9 +40,9 @@ def room(room_id, username):
     return "Room not found"
 
 
-@app.route('/images/<path:path>')
-def images(path):
-    return send_from_directory('juiced/images', path)
+@app.route('/assets/<path:path>')
+def assets(path):
+    return send_from_directory('juiced/assets', path)
 
 
 @socket.on('user_entered')

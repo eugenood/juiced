@@ -45,7 +45,7 @@ class Room:
 
         for i in range(len(state)):
             for j in range(len(state[i])):
-                state[i][j] = "../../images/" + state[i][j]
+                state[i][j] = "../../assets/" + state[i][j]
 
         return state
 
