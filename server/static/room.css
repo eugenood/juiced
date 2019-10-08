@@ -56,7 +56,6 @@ body, html {
 
 #joystick {
     background-color: #ecf0f155;
-    border: 1px solid #ecf0f188;
     border-radius: 50%;
     bottom: 30px;
     display: grid;
