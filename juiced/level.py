@@ -12,6 +12,9 @@ class Level:
         if level_id == "split":
             return Level.SPLIT
 
+        if level_id == "blind":
+            return Level.BLIND
+
         return Level.SMALL
 
     SMALL = {
@@ -54,4 +57,17 @@ class Level:
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))]
 
+    }
+
+    BLIND = {
+
+        "stage_size": (9, 9),
+        "human_location": (2, 5),
+        "robot_location": (7, 5),
+        "wall_locations": [(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8)],
+        "table_locations": [(4, 3), (4, 4), (4, 5)],
+        "cup_locations": [(0, 0), (1, 0), (2, 0)],
+        "juicer_locations": [(7, 0), (8, 0), (9, 0)],
+        "apple_storage_locations": [((0, 8), (0, 7))],
+        "orange_storage_locations": [((0, 5), (0, 4))]
     }
