@@ -1,4 +1,5 @@
 from juiced.carriable import Apple, Cup, Orange
+import random
 
 
 class Interactable: pass
@@ -31,11 +32,9 @@ class Table(Interactable):
 class AppleStorage(Interactable):
 
     def __init__(self):
-
         self.is_open = False
 
     def interact(self, interactor):
-
         if self.is_open and interactor.carriage is None:
             interactor.carriage = Apple()
 
@@ -43,11 +42,9 @@ class AppleStorage(Interactable):
 class OrangeStorage(Interactable):
 
     def __init__(self):
-
         self.is_open = False
 
     def interact(self, interactor):
-
         if self.is_open and interactor.carriage is None:
             interactor.carriage = Orange()
 
@@ -55,16 +52,13 @@ class OrangeStorage(Interactable):
 class StorageButton(Interactable):
 
     def __init__(self, storage):
-
         self.storage = storage
 
     def interact(self, interactor):
-
         self.storage.is_open = not self.storage.is_open
 
 
 class Juicer(Interactable):
-
     FILLING_EMPTY = 0
     FILLING_APPLEJUICE = 1
     FILLING_ORANGEJUICE = 2
@@ -78,14 +72,12 @@ class Juicer(Interactable):
         if isinstance(interactor.carriage, Apple):
 
             if self.filling == Juicer.FILLING_EMPTY:
-
                 self.filling = Juicer.FILLING_APPLEJUICE
                 interactor.carriage = None
 
         elif isinstance(interactor.carriage, Orange):
 
             if self.filling == Juicer.FILLING_EMPTY:
-
                 self.filling = Juicer.FILLING_ORANGEJUICE
                 interactor.carriage = None
 
@@ -110,3 +102,34 @@ class Juicer(Interactable):
 
                 self.filling = Juicer.FILLING_ORANGEJUICE
                 interactor.carriage.filling = Cup.FILLING_EMPTY
+
+
+class Counter(Interactable):
+    ORDER_APPLEJUICE = 0
+    ORDER_ORANGEJUICE = 1
+
+    def __init__(self):
+        orderID = random.randint(0, 1)
+        if orderID == 0:
+            self.order = Counter.ORDER_APPLEJUICE
+        else:
+            self.order = Counter.ORDER_ORANGEJUICE
+
+    def interact(self, interactor):
+        if isinstance(interactor.carriage, Cup):
+            if self.order == self.ORDER_APPLEJUICE:
+                if interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+                    orderID = random.randint(0, 1)
+                    if orderID == 0:
+                        self.order = Counter.ORDER_APPLEJUICE
+                    else:
+                        self.order = Counter.ORDER_ORANGEJUICE
+                    interactor.carriage.filling = Cup.FILLING_EMPTY
+            else:
+                if interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+                    orderID = random.randint(0, 1)
+                    if orderID == 0:
+                        self.order = Counter.ORDER_APPLEJUICE
+                    else:
+                        self.order = Counter.ORDER_ORANGEJUICE
+                    interactor.carriage.filling = Cup.FILLING_EMPTY

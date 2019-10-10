@@ -12,8 +12,8 @@ class Level:
         if level_id == "split":
             return Level.SPLIT
 
-        if level_id == "blind":
-            return Level.BLIND
+        if level_id == "order":
+            return Level.ORDER
 
         return Level.SMALL
 
@@ -27,7 +27,8 @@ class Level:
         "cup_locations": [],
         "juicer_locations": [],
         "apple_storage_locations": [((1, 1), (2, 2))],
-        "orange_storage_locations": [((1, 2), (2, 1))]
+        "orange_storage_locations": [((1, 2), (2, 1))],
+        "counter_locations": []
 
     }
 
@@ -41,7 +42,8 @@ class Level:
         "cup_locations": [(2, 0), (4, 0), (6, 0)],
         "juicer_locations": [(2, 9), (4, 9), (6, 9)],
         "apple_storage_locations": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
-        "orange_storage_locations": [((3, 9), (5, 9)), ((5, 6), (3, 6))]
+        "orange_storage_locations": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
+        "counter_locations": []
 
     }
 
@@ -55,11 +57,12 @@ class Level:
         "cup_locations": [(0, 0), (1, 0), (2, 0)],
         "juicer_locations": [(7, 0), (8, 0), (9, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
-        "orange_storage_locations": [((0, 5), (0, 4))]
+        "orange_storage_locations": [((0, 5), (0, 4))],
+        "counter_locations": []
 
     }
 
-    BLIND = {
+    ORDER = {
 
         "stage_size": (9, 9),
         "human_location": (2, 5),
@@ -69,5 +72,6 @@ class Level:
         "cup_locations": [(0, 0), (1, 0), (2, 0)],
         "juicer_locations": [(7, 0), (8, 0), (9, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
-        "orange_storage_locations": [((0, 5), (0, 4))]
+        "orange_storage_locations": [((0, 5), (0, 4))],
+        "counter_locations": [(3, 0)]
     }

@@ -1,5 +1,5 @@
 from juiced.character import Human, Robot
-from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Table, Wall
+from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Table, Wall, Counter
 from juiced.metadata import Metadata
 
 
@@ -99,7 +99,6 @@ class Stage:
             self.add(Juicer(), juicer_position[0], juicer_position[1])
 
         for apple_storage_position, apple_storage_button_position in self.level["apple_storage_locations"]:
-
             apple_storage = AppleStorage()
             apple_storage_button = StorageButton(apple_storage)
 
@@ -107,9 +106,12 @@ class Stage:
             self.add(apple_storage_button, apple_storage_button_position[0], apple_storage_button_position[1])
 
         for orange_storage_position, orange_storage_button_position in self.level["orange_storage_locations"]:
-
             orange_storage = OrangeStorage()
             orange_storage_button = StorageButton(orange_storage)
 
             self.add(orange_storage, orange_storage_position[0], orange_storage_position[1])
             self.add(orange_storage_button, orange_storage_button_position[0], orange_storage_button_position[1])
+
+        for counter_position in self.level["counter_locations"]:
+            counter = Counter()
+            self.add(counter, counter_position[0], counter_position[1])

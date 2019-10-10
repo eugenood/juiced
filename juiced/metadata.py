@@ -1,17 +1,15 @@
 from juiced.carriable import Apple, Cup, Orange
 from juiced.character import Character, Human, Robot
-from juiced.interactable import AppleStorage, Juicer, OrangeStorage, StorageButton, Wall, Table
+from juiced.interactable import AppleStorage, Juicer, OrangeStorage, StorageButton, Wall, Table, Counter
 
 
 class Metadata:
-
     urls = []
     instance = None
 
     class Entry:
 
         def __init__(self, url):
-
             self.index = len(Metadata.urls)
             self.url = url
 
@@ -40,23 +38,23 @@ class Metadata:
             Cup.FILLING_ORANGEJUICE: Metadata.Entry("cup/orangejuice.png")
 
         }
-        
+
         self.table = {
-        
+
             "default": Metadata.Entry("table/empty.png"),
-            
+
             "apple": Metadata.Entry("table/apple.png"),
-            
+
             "orange": Metadata.Entry("table/orange.png"),
-            
+
             "cup": {
-                    
+
                 Cup.FILLING_EMPTY: Metadata.Entry("table/cup/empty.png"),
                 Cup.FILLING_APPLEJUICE: Metadata.Entry("table/cup/applejuice.png"),
                 Cup.FILLING_ORANGEJUICE: Metadata.Entry("table/cup/orangejuice.png")
-                
+
             }
-        
+
         }
 
         self.juicer = {
@@ -86,6 +84,11 @@ class Metadata:
             AppleStorage: Metadata.Entry("storage/apple/button.png"),
             OrangeStorage: Metadata.Entry("storage/orange/button.png")
 
+        }
+
+        self.counter = {
+            Counter.ORDER_APPLEJUICE: Metadata.Entry("counter/applejuice.png"),
+            Counter.ORDER_ORANGEJUICE: Metadata.Entry("counter/orangejuice.png")
         }
 
         self.human = {
@@ -276,3 +279,6 @@ class Metadata:
 
         elif isinstance(entity, Robot) and isinstance(entity.carriage, Cup):
             return self.robot["cup"][entity.carriage.filling][entity.direction]
+
+        elif isinstance(entity, Counter):
+            return self.counter[entity.order]
