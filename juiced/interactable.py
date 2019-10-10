@@ -4,7 +4,9 @@ from juiced.carriable import Apple, Cup, Orange
 class Interactable: pass
 
 
-class Wall(Interactable): pass
+class Wall(Interactable):
+
+    def interact(self, interactor): pass
 
 
 class Table(Interactable):
