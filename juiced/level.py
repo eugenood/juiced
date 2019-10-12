@@ -19,16 +19,16 @@ class Level:
 
     SMALL = {
 
-        "stage_size": (4, 4),
-        "human_location": (0, 0),
-        "robot_location": (3, 3),
+        "stage_size": (6, 6),
+        "human_location": (5, 0),
+        "robot_location": (5, 1),
         "wall_locations": [],
         "table_locations": [],
-        "cup_locations": [],
-        "juicer_locations": [],
-        "apple_storage_locations": [((1, 1), (2, 2))],
-        "orange_storage_locations": [((1, 2), (2, 1))],
-        "counter_locations": []
+        "cup_locations": [(4, 5)],
+        "juicer_locations": [(0, 5)],
+        "apple_storage_locations": [((0, 1), (0, 0))],
+        "orange_storage_locations": [((0, 2), (0, 3))],
+        "counter_locations": [(5, 5)]
 
     }
 
