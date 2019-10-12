@@ -80,15 +80,17 @@ def handle_action_performed(req):
     username = req["username"]
     action = req["action"]
 
+    reward = 0
+
     if username == rooms[room_id].human_username:
-        rooms[room_id].human_act(action)
+        reward = rooms[room_id].human_act(action)
 
     elif username == rooms[room_id].robot_username:
-        rooms[room_id].robot_act(action)
+        reward = rooms[room_id].robot_act(action)
 
     state = rooms[room_id].get_state()
     rooms[room_id].dump_history()
-    socket.emit("state_changed:" + room_id, data=state)
+    socket.emit("state_changed:" + room_id, data=(state, reward))
 
 
 if __name__ == "__main__":

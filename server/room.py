@@ -20,6 +20,8 @@ class Room:
         self.human_actions = []
         self.robot_actions = []
 
+        self.reward_previous = 0
+
     def add_player(self, username):
 
         if self.human_username is None:
@@ -30,11 +32,11 @@ class Room:
 
     def human_act(self, human_action):
 
-        self._act(human_action, Character.ACTION_NONE)
+        return self._act(human_action, Character.ACTION_NONE)
 
     def robot_act(self, robot_action):
         
-        self._act(Character.ACTION_NONE, robot_action)
+        return self._act(Character.ACTION_NONE, robot_action)
 
     def get_state(self):
 
@@ -71,3 +73,9 @@ class Room:
 
         self.human_actions.append(human_action)
         self.robot_actions.append(robot_action)
+
+        reward_current = self.stage.get_reward()
+        reward_diff = reward_current - self.reward_previous
+        self.reward_previous = reward_current
+
+        return reward_diff

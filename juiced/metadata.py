@@ -4,6 +4,7 @@ from juiced.interactable import AppleStorage, Juicer, OrangeStorage, StorageButt
 
 
 class Metadata:
+
     urls = []
     instance = None
 
@@ -87,8 +88,10 @@ class Metadata:
         }
 
         self.counter = {
-            Counter.ORDER_APPLEJUICE: Metadata.Entry("counter/applejuice.png"),
-            Counter.ORDER_ORANGEJUICE: Metadata.Entry("counter/orangejuice.png")
+
+            Counter.CUSTOMER_CHICKEN: Metadata.Entry("counter/chicken.png"),
+            Counter.CUSTOMER_GORILLA: Metadata.Entry("counter/gorilla.png")
+
         }
 
         self.human = {
@@ -281,4 +284,4 @@ class Metadata:
             return self.robot["cup"][entity.carriage.filling][entity.direction]
 
         elif isinstance(entity, Counter):
-            return self.counter[entity.order]
+            return self.counter[entity.customer]

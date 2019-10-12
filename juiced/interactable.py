@@ -5,6 +5,9 @@ import random
 class Interactable: pass
 
 
+class Rewardable(Interactable): pass
+
+
 class Wall(Interactable):
 
     def interact(self, interactor): pass
@@ -111,25 +114,35 @@ class Juicer(Interactable):
                 interactor.carriage.filling = Cup.FILLING_EMPTY
 
 
-class Counter(Interactable):
+class Counter(Rewardable):
 
-    ORDER_APPLEJUICE = 0
-    ORDER_ORANGEJUICE = 1
+    CUSTOMER_CHICKEN = 0
+    CUSTOMER_GORILLA = 1
 
-    def __init__(self):
+    def __init__(self, reward_chicken=(1, 0), reward_gorilla=(0, 1)):
 
-        self.order = random.choice([Counter.ORDER_APPLEJUICE, Counter.ORDER_ORANGEJUICE])
+        self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+
+        self.reward_chicken = reward_chicken
+        self.reward_gorilla = reward_gorilla
+
+        self.reward = 0
 
     def interact(self, interactor):
 
-        if isinstance(interactor.carriage, Cup):
+        if isinstance(interactor.carriage, Cup) and interactor.carriage.filling != Cup.FILLING_EMPTY:
 
-            if self.order == self.ORDER_APPLEJUICE and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+            if self.customer == self.CUSTOMER_CHICKEN and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+                self.reward = self.reward + self.reward_chicken[0]
 
-                self.order = random.choice([Counter.ORDER_APPLEJUICE, Counter.ORDER_ORANGEJUICE])
-                interactor.carriage.filling = Cup.FILLING_EMPTY
+            elif self.customer == self.CUSTOMER_CHICKEN and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+                self.reward = self.reward + self.reward_chicken[1]
 
-            elif self.order == self.ORDER_ORANGEJUICE and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+            elif self.customer == self.CUSTOMER_GORILLA and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+                self.reward = self.reward + self.reward_gorilla[0]
 
-                self.order = random.choice([Counter.ORDER_APPLEJUICE, Counter.ORDER_ORANGEJUICE])
-                interactor.carriage.filling = Cup.FILLING_EMPTY
+            elif self.customer == self.CUSTOMER_GORILLA and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+                self.reward = self.reward + self.reward_gorilla[1]
+
+            self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+            interactor.carriage.filling = Cup.FILLING_EMPTY

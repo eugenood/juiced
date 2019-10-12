@@ -15,6 +15,8 @@ class Stage:
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.metadata = Metadata.get_instance()
 
+        self.rewardables = []
+
         self._initialize_characters()
         self._initialize_entities()
 
@@ -76,6 +78,15 @@ class Stage:
 
         return state
 
+    def get_reward(self):
+
+        total_reward = 0
+
+        for rewardable in self.rewardables:
+            total_reward = total_reward + rewardable.reward
+
+        return total_reward
+
     def _initialize_characters(self):
 
         self.human = Human(self)
@@ -99,6 +110,7 @@ class Stage:
             self.add(Juicer(), juicer_position[0], juicer_position[1])
 
         for apple_storage_position, apple_storage_button_position in self.level["apple_storage_locations"]:
+
             apple_storage = AppleStorage()
             apple_storage_button = StorageButton(apple_storage)
 
@@ -106,6 +118,7 @@ class Stage:
             self.add(apple_storage_button, apple_storage_button_position[0], apple_storage_button_position[1])
 
         for orange_storage_position, orange_storage_button_position in self.level["orange_storage_locations"]:
+
             orange_storage = OrangeStorage()
             orange_storage_button = StorageButton(orange_storage)
 
@@ -113,5 +126,8 @@ class Stage:
             self.add(orange_storage_button, orange_storage_button_position[0], orange_storage_button_position[1])
 
         for counter_position in self.level["counter_locations"]:
+
             counter = Counter()
+
+            self.rewardables.append(counter)
             self.add(counter, counter_position[0], counter_position[1])

@@ -8,11 +8,15 @@ window.onload = function() {
     var assets = []
     var numAssetsLoaded = 0
 
+    var isHuman = false
+
     socket.emit("user_entered", { room_id: roomId })
 
     socket.on("user_changed:" + roomId, function(humanUsername, robotUsername, state, assetsUrls) {
 
         if (isInitialized) return;
+
+        isHuman = (humanUsername === username)
 
         document.getElementById("human-username").innerHTML = humanUsername
         document.getElementById("robot-username").innerHTML = robotUsername
@@ -21,9 +25,16 @@ window.onload = function() {
 
     })
 
-    socket.on("state_changed:" + roomId, function(state) {
+    socket.on("state_changed:" + roomId, function(state, reward) {
 
         drawBoard(state)
+
+        if (isHuman) {
+
+            var messageBox = document.getElementById("message")
+            messageBox.innerHTML = "You gained <b>" + reward + "</b> points for your previous action."
+
+        }
 
     })
 
