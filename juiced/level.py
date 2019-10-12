@@ -55,7 +55,7 @@ class Level:
         "wall_locations": [(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8)],
         "table_locations": [(4, 3), (4, 4), (4, 5)],
         "cup_locations": [(0, 0), (1, 0), (2, 0)],
-        "juicer_locations": [(7, 0), (8, 0), (9, 0)],
+        "juicer_locations": [(7, 0), (8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
         "counter_locations": []
@@ -69,9 +69,10 @@ class Level:
         "robot_location": (7, 5),
         "wall_locations": [(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8)],
         "table_locations": [(4, 3), (4, 4), (4, 5)],
-        "cup_locations": [(0, 0), (1, 0), (2, 0)],
-        "juicer_locations": [(7, 0), (8, 0), (9, 0)],
+        "cup_locations": [(0, 0), (0, 1)],
+        "juicer_locations": [(8, 7), (8, 8)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "counter_locations": [(3, 0)]
+        "counter_locations": [(8, 0)]
+
     }
