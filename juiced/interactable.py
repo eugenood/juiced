@@ -119,7 +119,7 @@ class Counter(Rewardable):
     CUSTOMER_CHICKEN = 0
     CUSTOMER_GORILLA = 1
 
-    def __init__(self, reward_chicken=(1, 0), reward_gorilla=(0, 1)):
+    def __init__(self, reward_chicken=(1, 0, 20, 10), reward_gorilla=(0, 1, 10, 20)):
 
         self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
 
@@ -130,19 +130,55 @@ class Counter(Rewardable):
 
     def interact(self, interactor):
 
-        if isinstance(interactor.carriage, Cup) and interactor.carriage.filling != Cup.FILLING_EMPTY:
+        if self.customer == self.CUSTOMER_CHICKEN:
 
-            if self.customer == self.CUSTOMER_CHICKEN and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+            if isinstance(interactor.carriage, Apple):
+
                 self.reward = self.reward + self.reward_chicken[0]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage = None
 
-            elif self.customer == self.CUSTOMER_CHICKEN and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+            elif isinstance(interactor.carriage, Orange):
+
                 self.reward = self.reward + self.reward_chicken[1]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage = None
 
-            elif self.customer == self.CUSTOMER_GORILLA and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+
+                self.reward = self.reward + self.reward_chicken[2]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage.filling = Cup.FILLING_EMPTY
+
+            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+
+                self.reward = self.reward + self.reward_chicken[3]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage.filling = Cup.FILLING_EMPTY
+
+        elif self.customer == self.CUSTOMER_GORILLA:
+
+            if isinstance(interactor.carriage, Apple):
+
                 self.reward = self.reward + self.reward_gorilla[0]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage = None
 
-            elif self.customer == self.CUSTOMER_GORILLA and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+            elif isinstance(interactor.carriage, Orange):
+
                 self.reward = self.reward + self.reward_gorilla[1]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage = None
 
-            self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
-            interactor.carriage.filling = Cup.FILLING_EMPTY
+            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+
+                self.reward = self.reward + self.reward_gorilla[2]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage.filling = Cup.FILLING_EMPTY
+
+            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+
+                self.reward = self.reward + self.reward_gorilla[3]
+                self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
+                interactor.carriage.filling = Cup.FILLING_EMPTY
+

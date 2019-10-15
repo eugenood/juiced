@@ -9,6 +9,7 @@ window.onload = function() {
     var numAssetsLoaded = 0
 
     var isHuman = false
+    var cumulativeReward = 0
 
     socket.emit("user_entered", { room_id: roomId })
 
@@ -30,9 +31,10 @@ window.onload = function() {
         drawBoard(state)
 
         if (isHuman) {
-
+            
+            cumulativeReward = cumulativeReward + parseInt(reward)
             var messageBox = document.getElementById("message")
-            messageBox.innerHTML = "You gained <b>" + reward + "</b> points for your previous action."
+            messageBox.innerHTML = "You gained <b>" + cumulativeReward + "</b> points for your previous action."
 
         }
 
