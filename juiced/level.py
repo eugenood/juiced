@@ -12,6 +12,9 @@ class Level:
         if level_id == "split":
             return Level.SPLIT
 
+        if level_id == "infer":
+            return Level.INFER
+
         if level_id == "order":
             return Level.ORDER
 
@@ -61,7 +64,7 @@ class Level:
         "juicer_locations": [(8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "counter_locations": []
+        "counter_locations": [(8, 8)]
 
     }
 
@@ -76,7 +79,7 @@ class Level:
         "juicer_locations": [(8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "counter_locations": []
+        "counter_locations": [(8, 8)]
 
     }
 
