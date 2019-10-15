@@ -83,14 +83,14 @@ class Level:
     MAZE = {
 
         "stage_size": (10, 10),
-        "human_location": (9, 2),
-        "robot_location": (2, 2),
-        "wall_locations": [(9, 7), (8, 7), (7, 7), (5, 7), (9, 4), (8, 4), (7, 4), (6, 4), (5, 4)],
-        "table_locations": [(6, 0), (6, 1), (6, 2)],
-        "cup_locations": [(9, 0), (9,1)],
-        "juicer_locations": [(7, 0)],
-        "apple_storage_locations": [(9, 2)],
-        "orange_storage_locations": [(8, 2)],
-        "counter_locations": ([9, 5])
+        "human_location": (0, 0),
+        "robot_location": (1, 1),
+        "wall_locations": [(2, 7), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2)],
+        "table_locations": [],
+        "cup_locations": [(2, 0), (4, 0), (6, 0)],
+        "juicer_locations": [(2, 9), (4, 9), (6, 9)],
+        "apple_storage_locations": [((3, 0), (5, 0)), ((3, 3), (5, 3))],
+        "orange_storage_locations": [((3, 9), (5, 9)), ((5, 6), (3, 6))],
+        "counter_locations": []
 
     }
