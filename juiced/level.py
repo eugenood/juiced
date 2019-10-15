@@ -15,6 +15,9 @@ class Level:
         if level_id == "order":
             return Level.ORDER
 
+        if level_id == "maze":
+            return Level.MAZE
+
         return Level.SMALL
 
     SMALL = {
@@ -74,5 +77,20 @@ class Level:
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
         "counter_locations": [(8, 0)]
+
+    }
+
+    MAZE = {
+
+        "stage_size": (10, 10),
+        "human_location": (9, 2),
+        "robot_location": (2, 2),
+        "wall_locations": [(9, 7), (8, 7), (7, 7), (5, 7), (9, 4), (8, 4), (7, 4), (6, 4), (5, 4)],
+        "table_locations": [(6, 0), (6, 1), (6, 2)],
+        "cup_locations": [(9, 0), (9,1)],
+        "juicer_locations": [(7, 0)],
+        "apple_storage_locations": [(9, 2)],
+        "orange_storage_locations": [(8, 2)],
+        "counter_locations": ([9, 5])
 
     }
