@@ -11,6 +11,7 @@ class Metadata:
     class Entry:
 
         def __init__(self, url):
+
             self.index = len(Metadata.urls)
             self.url = url
 
