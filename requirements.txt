@@ -1,5 +1,7 @@
 flask
 flask-socketio
 gevent
+gym
+matplotlib
 numpy
 torch
