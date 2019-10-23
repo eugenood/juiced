@@ -7,9 +7,9 @@ class QNetwork(nn.Module):
         
         super(QNetwork, self).__init__()
         
-        self.fc1 = nn.Linear(dim_state[0] * dim_state[1], 24)
-        self.fc2 = nn.Linear(24, 24)
-        self.fc3 = nn.Linear(24, dim_action)
+        self.fc1 = nn.Linear(dim_state[0] * dim_state[1], 64)
+        self.fc2 = nn.Linear(64, 64)
+        self.fc3 = nn.Linear(64, dim_action)
     
     def forward(self, x):
         

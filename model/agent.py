@@ -1,3 +1,4 @@
+import json
 import random
 
 import numpy as np
@@ -10,15 +11,15 @@ import torch.optim as optim
 from model.buffer import ReplayBuffer
 from model.network import QNetwork
 
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 BUFFER_CAPACITY = 10000
 DISCOUNT_FACTOR = 0.99
 EPSILON_DECAY = 0.999
 EPSILON_END = 0.01
 EPSILON_START = 1.0
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.0001
 TARGET_UPDATE = 100
-TOTAL_EPISODES = 10000
+TOTAL_EPISODES = 100000
 
 class DDQNAgent(object):
 
@@ -61,6 +62,48 @@ class DDQNAgent(object):
         self.epsilon = EPSILON_START
 
         self.policy_net.train()
+
+    def initialize_demo(self, demo_url):
+
+        with open(demo_url) as demo_data:
+
+            demo = json.load(demo_data)
+            human_actions = demo['human_actions']
+
+            state = self.env.reset()
+            state = torch.from_numpy(state).float().cuda()
+
+            cumulative_reward = 0
+
+            for action in human_actions:
+
+                action = torch.tensor([action], dtype=torch.int64).cuda()
+                next_state, reward, done, _ = self.env.step((action.item(), 0))
+
+                cumulative_reward = cumulative_reward + reward
+
+                next_state = torch.from_numpy(next_state).float().cuda()
+                reward = torch.tensor([reward], dtype=torch.float32).cuda()
+
+                self.buffer.push(state, action, reward, next_state, done)
+                self.buffer.push(state, action, reward, next_state, done)
+                self.buffer.push(state, action, reward, next_state, done)
+                self.buffer.push(state, action, reward, next_state, done)
+                self.buffer.push(state, action, reward, next_state, done)
+                
+                state = next_state
+
+                if done: break
+
+            print(cumulative_reward)
+
+        for i_episode in range(10000):
+
+            self.optimize(debug=(i_episode % TARGET_UPDATE == 0))
+
+            if i_episode % TARGET_UPDATE == 0:
+                
+                self.target_net.load_state_dict(self.policy_net.state_dict())
     
     def train(self, model_path):
 
@@ -92,16 +135,15 @@ class DDQNAgent(object):
             
             rewards.append(cumulative_reward)
 
+            if cumulative_reward > 0: print(i_episode, cumulative_reward)
+
             if i_episode % TARGET_UPDATE == 0:
                 
                 torch.save(self.policy_net.state_dict(), model_path)
                 self.target_net.load_state_dict(self.policy_net.state_dict())
-
-                print(i_episode, np.mean(rewards))
+                self.optimize(debug=True)
         
-        self.visualize_rewards(rewards)
-
-    def optimize(self):
+    def optimize(self, debug=False):
 
         if len(self.buffer) < BATCH_SIZE: return
     
@@ -112,7 +154,7 @@ class DDQNAgent(object):
         action_batch = torch.stack(batch[1])
         reward_batch = torch.stack(batch[2])
         next_state_batch = torch.stack(batch[3])
-        
+
         non_final_mask = [not done for done in batch[4]]
         non_final_next_states = next_state_batch[non_final_mask]
 
@@ -124,7 +166,7 @@ class DDQNAgent(object):
         
         expected_state_values = reward_batch + (DISCOUNT_FACTOR * next_state_values)
         
-        loss = F.mse_loss(state_values, expected_state_values)
+        loss = F.smooth_l1_loss(state_values, expected_state_values)
         
         self.optimizer.zero_grad()
         loss.backward()
@@ -166,8 +208,6 @@ class DDQNAgent(object):
             rewards.append(cumulative_reward)
 
             if i_episode % TARGET_UPDATE == 0: print(i_episode, np.mean(rewards))
-
-        self.visualize_rewards(rewards)
         
     def visualize_rewards(self, rewards):
 
@@ -185,3 +225,4 @@ class DDQNAgent(object):
             plt.plot(means.numpy())
 
         plt.show()
+
