@@ -7,15 +7,21 @@ class QNetwork(nn.Module):
         
         super(QNetwork, self).__init__()
         
-        self.fc1 = nn.Linear(dim_state[0] * dim_state[1], 64)
-        self.fc2 = nn.Linear(64, 64)
-        self.fc3 = nn.Linear(64, dim_action)
+        self.conv1 = nn.Conv2d(dim_state[0], 32, 1)
+        self.conv2 = nn.Conv2d(32, 16, 3)
+        self.fc1 = nn.Linear(32, 32)
+        self.fc2 = nn.Linear(32 ,32)
+        self.fc3 = nn.Linear(32, dim_action)
     
     def forward(self, x):
         
-        if x.dim() == 3: x = x.reshape(x.shape[0], -1)
-        else: x = x.reshape(1, -1)
+        is_batch = (x.ndim == 4)
 
+        if not is_batch: x = x.unsqueeze(0)
+
+        x = F.relu(self.conv1(x))
+        x = F.relu(self.conv2(x))
+        x = x.flatten(1) 
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         

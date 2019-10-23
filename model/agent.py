@@ -11,6 +11,7 @@ import torch.optim as optim
 from model.buffer import ReplayBuffer
 from model.network import QNetwork
 
+
 BATCH_SIZE = 64
 BUFFER_CAPACITY = 10000
 DISCOUNT_FACTOR = 0.99
@@ -21,20 +22,23 @@ LEARNING_RATE = 0.0001
 TARGET_UPDATE = 100
 TOTAL_EPISODES = 100000
 
-class DDQNAgent(object):
+
+class LaurelAgent(object):
 
     def __init__(self, env):
 
         self.env = env
         self.epsilon = EPSILON_END
     
+        self.dim_state = self.env.observation_space.shape
+        self.dim_state = (self.env.observation_space.high.max(), self.dim_state[0], self.dim_state[1])
+
+        self.dim_action = self.env.action_space.n
+
     def initialize_network(self, state_dict):
 
-        dim_state = self.env.observation_space.shape
-        dim_action = self.env.action_space.n
-        
-        self.policy_net = QNetwork(dim_state, dim_action).cuda()
-        self.target_net = QNetwork(dim_state, dim_action).cuda()
+        self.policy_net = QNetwork(self.dim_state, self.dim_action).cuda()
+        self.target_net = QNetwork(self.dim_state, self.dim_action).cuda()
 
         if state_dict is not None:
             self.policy_net.load_state_dict(state_dict)
@@ -51,9 +55,7 @@ class DDQNAgent(object):
             with torch.no_grad():
                 return self.policy_net(state).max(1)[1].view(1)
         
-        dim_action = self.env.action_space.n
-
-        return torch.tensor([random.randrange(dim_action)], dtype=torch.int64).cuda()
+        return torch.tensor([random.randrange(self.dim_action)]).long().cuda()
 
     def initialize_training(self):
 
@@ -71,31 +73,25 @@ class DDQNAgent(object):
             human_actions = demo['human_actions']
 
             state = self.env.reset()
-            state = torch.from_numpy(state).float().cuda()
+            state = self.convert_state(state)
 
             cumulative_reward = 0
 
             for action in human_actions:
 
-                action = torch.tensor([action], dtype=torch.int64).cuda()
+                action = torch.tensor([action]).long().cuda()
                 next_state, reward, done, _ = self.env.step((action.item(), 0))
 
                 cumulative_reward = cumulative_reward + reward
 
-                next_state = torch.from_numpy(next_state).float().cuda()
-                reward = torch.tensor([reward], dtype=torch.float32).cuda()
+                next_state = self.convert_state(next_state)
+                reward = torch.tensor([reward]).float().cuda()
 
-                self.buffer.push(state, action, reward, next_state, done)
-                self.buffer.push(state, action, reward, next_state, done)
-                self.buffer.push(state, action, reward, next_state, done)
-                self.buffer.push(state, action, reward, next_state, done)
                 self.buffer.push(state, action, reward, next_state, done)
                 
                 state = next_state
 
                 if done: break
-
-            print(cumulative_reward)
 
         for i_episode in range(10000):
 
@@ -112,7 +108,7 @@ class DDQNAgent(object):
         for i_episode in range(TOTAL_EPISODES):
 
             state = self.env.reset()
-            state = torch.from_numpy(state).float().cuda()
+            state = self.convert_state(state)
 
             cumulative_reward = 0
             
@@ -123,8 +119,8 @@ class DDQNAgent(object):
 
                 cumulative_reward = cumulative_reward + reward
 
-                next_state = torch.from_numpy(next_state).float().cuda()
-                reward = torch.tensor([reward], dtype=torch.float32).cuda()
+                next_state = self.convert_state(next_state)
+                reward = torch.tensor([reward]).float().cuda()
 
                 self.buffer.push(state, action, reward, next_state, done)
                 self.optimize()
@@ -191,7 +187,7 @@ class DDQNAgent(object):
         for i_episode in range(TOTAL_EPISODES):
 
             state = self.env.reset()
-            state = torch.from_numpy(state).float().cuda()
+            state = self.convert_state(state)
 
             cumulative_reward = 0
             
@@ -199,7 +195,7 @@ class DDQNAgent(object):
                 
                 action = self.act(state)
                 state, reward, done, _ = self.env.step((action.item(), 0))
-                state = torch.from_numpy(state).float().cuda()
+                state = self.convert_state(state)
 
                 cumulative_reward = cumulative_reward + reward
 
@@ -209,20 +205,10 @@ class DDQNAgent(object):
 
             if i_episode % TARGET_UPDATE == 0: print(i_episode, np.mean(rewards))
         
-    def visualize_rewards(self, rewards):
+    def convert_state(self, state):
 
-        rewards = torch.tensor(rewards)
-        
-        plt.xlabel('Episode')
-        plt.ylabel('Reward')
+        state = torch.from_numpy(state).long().cuda()
+        state = F.one_hot(state, int(self.dim_state[0]))
+        state = state.permute(2, 0, 1).float()
 
-        plt.plot(rewards.numpy())
-
-        if len(rewards) >= 100:
-
-            means = rewards.unfold(0, 100, 1).mean(1).view(-1)
-            means = torch.cat((torch.zeros(99), means))
-            plt.plot(means.numpy())
-
-        plt.show()
-
+        return state

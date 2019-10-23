@@ -1,24 +1,26 @@
 import gym
 import torch
 
-from model.agent import DDQNAgent
+from model.agent import LaurelAgent
 
-from juiced.level import Level
 from juiced.env import JuicedEnv
+from juiced.level import Level
 
-# enable cuda
+if __name__ == "__main__":
 
-device = torch.device('cuda')
+    # enable cuda
 
-# create environment
+    device = torch.device("cuda")
 
-env = JuicedEnv("small")
-env.reset()
+    # create environment
 
-# create agent
+    env = JuicedEnv("small")
+    env.reset()
 
-agent = DDQNAgent(env)
-agent.initialize_network(None)
-agent.initialize_training()
-agent.initialize_demo('trajectories/demo.small.json')
-agent.train('./model/policy.pth')
+    # create agent
+
+    agent = LaurelAgent(env)
+    agent.initialize_network(None)
+    agent.initialize_training()
+    agent.initialize_demo("trajectories/demo.small.json")
+    agent.train("./model/policy.pth")

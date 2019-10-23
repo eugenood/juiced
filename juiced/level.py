@@ -33,7 +33,8 @@ class Level:
         "juicer_locations": [],
         "apple_storage_locations": [((1, 0), (0, 0))],
         "orange_storage_locations": [((2, 0), (3, 0))],
-        "customer_locations": [(3, 2)]
+        "chicken_locations": [(3, 2)],
+        "gorilla_locations": []
 
     }
 
@@ -50,7 +51,8 @@ class Level:
         "juicer_locations": [(0, 5)],
         "apple_storage_locations": [((0, 1), (0, 0))],
         "orange_storage_locations": [((0, 2), (0, 3))],
-        "customer_locations": [(5, 5)]
+        "chicken_locations": [(5, 5)],
+        "gorilla_locations": []
 
     }
 
@@ -67,7 +69,8 @@ class Level:
         "juicer_locations": [(8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "customer_locations": [(8, 8)]
+        "chicken_locations": [(8, 8)],
+        "gorilla_locations": []
 
     }
 
@@ -84,7 +87,8 @@ class Level:
         "juicer_locations": [(8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "customer_locations": [(8, 8)]
+        "chicken_locations": [(8, 8)],
+        "gorilla_locations": []
 
     }
 
@@ -105,6 +109,7 @@ class Level:
         "juicer_locations": [],
         "apple_storage_locations": [((8, 0), (8, 1)), ((2, 2), (2, 4))],
         "orange_storage_locations": [((8, 3), (8, 2)), ((4, 2), (4, 4))],
-        "customer_locations": [(9, 9)]
+        "chicken_locations": [(9, 9)],
+        "gorilla_locations": []
 
     }

@@ -20,9 +20,12 @@ class JuicedEnv(gym.Env):
 
         self.metadata = Metadata.get_instance()
 
-        self.action_space = gym.spaces.Tuple((gym.spaces.Discrete(6), gym.spaces.Discrete(6)))
-        self.observation_space = gym.spaces.Box(low=0, high=len(Metadata.urls), shape=(self.stage.height, self.stage.width), dtype=np.uint8)
+        self.observation_space = gym.spaces.Box(low=0,
+                                                high=len(Metadata.urls) - 1,
+                                                shape=(self.stage.height, self.stage.width),
+                                                dtype=np.uint8)
 
+        self.action_space = gym.spaces.Tuple((gym.spaces.Discrete(6), gym.spaces.Discrete(6)))
         self.action_space.n = 6
 
     def step(self, action):
