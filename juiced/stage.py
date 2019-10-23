@@ -1,5 +1,5 @@
 from juiced.character import Human, Robot
-from juiced.interactable import AppleStorage, Cup, Juicer, OrangeStorage, StorageButton, Table, Wall, Counter
+from juiced.interactable import AppleStorage, Chicken, Cup, Gorilla, Juicer, OrangeStorage, StorageButton, Table, Wall
 from juiced.metadata import Metadata
 
 
@@ -97,37 +97,50 @@ class Stage:
 
     def _initialize_entities(self):
 
-        for wall_position in self.level["wall_locations"]:
-            self.add(Wall(), wall_position[0], wall_position[1])
+        for wall_location in self.level["wall_locations"]:
+            self.add(Wall(), wall_location[0], wall_location[1])
 
-        for table_position in self.level["table_locations"]:
-            self.add(Table(), table_position[0], table_position[1])
+        for apple_location in self.level["apple_locations"]:
+            self.add(Apple(), apple_location[0], apple_location[1])
 
-        for cup_position in self.level["cup_locations"]:
-            self.add(Cup(), cup_position[0], cup_position[1])
+        for orange_location in self.level["orange_locations"]:
+            self.add(Orange(), orange_location[0], orange_position[1])
 
-        for juicer_position in self.level["juicer_locations"]:
-            self.add(Juicer(), juicer_position[0], juicer_position[1])
+        for cup_location in self.level["cup_locations"]:
+            self.add(Cup(), cup_location[0], cup_location[1])
 
-        for apple_storage_position, apple_storage_button_position in self.level["apple_storage_locations"]:
+        for table_location in self.level["table_locations"]:
+            self.add(Table(), table_location[0], table_location[1])
+
+        for juicer_location in self.level["juicer_locations"]:
+            self.add(Juicer(), juicer_location[0], juicer_location[1])
+
+        for apple_storage_location, apple_storage_button_location in self.level["apple_storage_locations"]:
 
             apple_storage = AppleStorage()
             apple_storage_button = StorageButton(apple_storage)
 
-            self.add(apple_storage, apple_storage_position[0], apple_storage_position[1])
-            self.add(apple_storage_button, apple_storage_button_position[0], apple_storage_button_position[1])
+            self.add(apple_storage, apple_storage_location[0], apple_storage_location[1])
+            self.add(apple_storage_button, apple_storage_button_location[0], apple_storage_button_location[1])
 
-        for orange_storage_position, orange_storage_button_position in self.level["orange_storage_locations"]:
+        for orange_storage_location, orange_storage_button_location in self.level["orange_storage_locations"]:
 
             orange_storage = OrangeStorage()
             orange_storage_button = StorageButton(orange_storage)
 
-            self.add(orange_storage, orange_storage_position[0], orange_storage_position[1])
-            self.add(orange_storage_button, orange_storage_button_position[0], orange_storage_button_position[1])
+            self.add(orange_storage, orange_storage_location[0], orange_storage_location[1])
+            self.add(orange_storage_button, orange_storage_button_location[0], orange_storage_button_location[1])
 
-        for counter_position in self.level["counter_locations"]:
+        for chicken_location in self.level["chicken_locations"]:
 
-            counter = Counter()
+            chicken = Chicken()
 
-            self.rewardables.append(counter)
-            self.add(counter, counter_position[0], counter_position[1])
+            self.rewardables.append(chicken)
+            self.add(chicken, chicken_location[0], chicken_location[1])
+
+        for gorilla_location in self.level["gorilla_locations"]:
+
+            gorilla = Gorila()
+
+            self.rewardables.append(gorilla)
+            self.add(gorilla, gorilla_location[0], gorilla_location[1])

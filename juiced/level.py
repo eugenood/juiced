@@ -15,9 +15,6 @@ class Level:
         if level_id == "infer":
             return Level.INFER
 
-        if level_id == "order":
-            return Level.ORDER
-
         if level_id == "maze":
             return Level.MAZE
 
@@ -29,12 +26,14 @@ class Level:
         "human_location": (0, 2),
         "robot_location": (1, 2),
         "wall_locations": [],
-        "table_locations": [],
+        "apple_locations": [],
+        "orange_locations": [],
         "cup_locations": [],
+        "table_locations": [],
         "juicer_locations": [],
         "apple_storage_locations": [((1, 0), (0, 0))],
         "orange_storage_locations": [((2, 0), (3, 0))],
-        "counter_locations": [(3, 2)]
+        "customer_locations": [(3, 2)]
 
     }
 
@@ -44,12 +43,14 @@ class Level:
         "human_location": (5, 0),
         "robot_location": (5, 1),
         "wall_locations": [],
-        "table_locations": [],
+        "apple_locations": [],
+        "orange_locations": [],
         "cup_locations": [(4, 5)],
+        "table_locations": [],
         "juicer_locations": [(0, 5)],
         "apple_storage_locations": [((0, 1), (0, 0))],
         "orange_storage_locations": [((0, 2), (0, 3))],
-        "counter_locations": [(5, 5)]
+        "customer_locations": [(5, 5)]
 
     }
 
@@ -59,12 +60,14 @@ class Level:
         "human_location": (2, 5),
         "robot_location": (7, 5),
         "wall_locations": [(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8)],
-        "table_locations": [(4, 3), (4, 4), (4, 5)],
+        "apple_locations": [],
+        "orange_locations": [],
         "cup_locations": [(0, 0), (1, 0), (2, 0)],
+        "table_locations": [(4, 3), (4, 4), (4, 5)],
         "juicer_locations": [(8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "counter_locations": [(8, 8)]
+        "customer_locations": [(8, 8)]
 
     }
 
@@ -74,12 +77,14 @@ class Level:
         "human_location": (7, 5),
         "robot_location": (2, 5),
         "wall_locations": [(4, 0), (4, 1), (4, 2), (4, 6), (4, 7), (4, 8)],
-        "table_locations": [(4, 3), (4, 4), (4, 5)],
+        "apple_locations": [],
+        "orange_locations": [],
         "cup_locations": [(0, 0), (1, 0), (2, 0)],
+        "table_locations": [(4, 3), (4, 4), (4, 5)],
         "juicer_locations": [(8, 0)],
         "apple_storage_locations": [((0, 8), (0, 7))],
         "orange_storage_locations": [((0, 5), (0, 4))],
-        "counter_locations": [(8, 8)]
+        "customer_locations": [(8, 8)]
 
     }
 
@@ -93,11 +98,13 @@ class Level:
                            (1, 7), (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1),
                            (2, 1), (3, 1), (4, 1), (5, 1),
                            (5, 2), (5, 3), (5, 4), (5, 5)],
-        "table_locations": [(8, 5), (9, 5)],
+        "apple_locations": [],
+        "orange_locations": [],
         "cup_locations": [],
+        "table_locations": [(8, 5), (9, 5)],
         "juicer_locations": [],
         "apple_storage_locations": [((8, 0), (8, 1)), ((2, 2), (2, 4))],
         "orange_storage_locations": [((8, 3), (8, 2)), ((4, 2), (4, 4))],
-        "counter_locations": [(9, 9)]
+        "customer_locations": [(9, 9)]
 
     }

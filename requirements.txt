@@ -4,4 +4,5 @@ gevent
 gym
 matplotlib
 numpy
+pillow
 torch

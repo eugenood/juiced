@@ -4,7 +4,7 @@ import torch
 from model.agent import DDQNAgent
 
 from juiced.level import Level
-from juiced.juiced import JuicedEnv
+from juiced.env import JuicedEnv
 
 # enable cuda
 

@@ -1,5 +1,4 @@
 from juiced.carriable import Apple, Cup, Orange
-import random
 
 
 class Interactable: pass
@@ -82,12 +81,14 @@ class Juicer(Interactable):
         if isinstance(interactor.carriage, Apple):
 
             if self.filling == Juicer.FILLING_EMPTY:
+
                 self.filling = Juicer.FILLING_APPLEJUICE
                 interactor.carriage = None
 
         elif isinstance(interactor.carriage, Orange):
 
             if self.filling == Juicer.FILLING_EMPTY:
+
                 self.filling = Juicer.FILLING_ORANGEJUICE
                 interactor.carriage = None
 
@@ -114,64 +115,45 @@ class Juicer(Interactable):
                 interactor.carriage.filling = Cup.FILLING_EMPTY
 
 
-class Counter(Rewardable):
+class Customer(Rewardable):
 
-    CUSTOMER_CHICKEN = 0
-    CUSTOMER_GORILLA = 1
+    def __init__(self, reward_distribution):
 
-    def __init__(self, reward_chicken=(1, 0, 20, 10), reward_gorilla=(0, 1, 10, 20)):
-
-        # self.customer = random.choice([Counter.CUSTOMER_CHICKEN, Counter.CUSTOMER_GORILLA])
-        self.customer = Counter.CUSTOMER_CHICKEN
-
-        self.reward_chicken = reward_chicken
-        self.reward_gorilla = reward_gorilla
-
+        self.reward_distribution = reward_distribution
         self.reward = 0
 
     def interact(self, interactor):
 
-        if self.customer == self.CUSTOMER_CHICKEN:
+        if isinstance(interactor.carriage, Apple):
 
-            if isinstance(interactor.carriage, Apple):
+            self.reward = self.reward + self.reward_distribution[0]
+            interactor.carriage = None
 
-                self.reward = self.reward + self.reward_chicken[0]
-                interactor.carriage = None
+        elif isinstance(interactor.carriage, Orange):
 
-            elif isinstance(interactor.carriage, Orange):
+            self.reward = self.reward + self.reward_distribution[1]
+            interactor.carriage = None
 
-                self.reward = self.reward + self.reward_chicken[1]
-                interactor.carriage = None
+        elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
 
-            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+            self.reward = self.reward + self.reward_distribution[2]
+            interactor.carriage.filling = Cup.FILLING_EMPTY
 
-                self.reward = self.reward + self.reward_chicken[2]
-                interactor.carriage.filling = Cup.FILLING_EMPTY
+        elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
 
-            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
+            self.reward = self.reward + self.reward_distribution[3]
+            interactor.carriage.filling = Cup.FILLING_EMPTY
 
-                self.reward = self.reward + self.reward_chicken[3]
-                interactor.carriage.filling = Cup.FILLING_EMPTY
 
-        elif self.customer == self.CUSTOMER_GORILLA:
+class Chicken(Customer):
 
-            if isinstance(interactor.carriage, Apple):
+    def __init__(self):
 
-                self.reward = self.reward + self.reward_gorilla[0]
-                interactor.carriage = None
+        super().__init__((1, 0, 20, 5))
 
-            elif isinstance(interactor.carriage, Orange):
 
-                self.reward = self.reward + self.reward_gorilla[1]
-                interactor.carriage = None
+class Gorilla(Customer):
 
-            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_APPLEJUICE:
+    def __init__(self):
 
-                self.reward = self.reward + self.reward_gorilla[2]
-                interactor.carriage.filling = Cup.FILLING_EMPTY
-
-            elif isinstance(interactor.carriage, Cup) and interactor.carriage.filling == Cup.FILLING_ORANGEJUICE:
-
-                self.reward = self.reward + self.reward_gorilla[3]
-                interactor.carriage.filling = Cup.FILLING_EMPTY
-
+        super().__init__((0, 1, 5, 20))

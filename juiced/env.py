@@ -1,11 +1,10 @@
 import gym
 import numpy as np
 
-from gym import spaces
-
 from juiced.level import Level
 from juiced.metadata import Metadata
 from juiced.stage import Stage
+
 
 class JuicedEnv(gym.Env):
 
@@ -21,8 +20,8 @@ class JuicedEnv(gym.Env):
 
         self.metadata = Metadata.get_instance()
 
-        self.action_space = spaces.Tuple((spaces.Discrete(6), spaces.Discrete(6)))
-        self.observation_space = spaces.Box(low=0, high=len(Metadata.urls), shape=(self.stage.height, self.stage.width), dtype=np.uint8)
+        self.action_space = gym.spaces.Tuple((gym.spaces.Discrete(6), gym.spaces.Discrete(6)))
+        self.observation_space = gym.spaces.Box(low=0, high=len(Metadata.urls), shape=(self.stage.height, self.stage.width), dtype=np.uint8)
 
         self.action_space.n = 6
 
@@ -57,4 +56,3 @@ class JuicedEnv(gym.Env):
     def render(self, mode='human', close=False):
 
         print(self.stage.get_state())
-

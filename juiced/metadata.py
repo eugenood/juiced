@@ -1,6 +1,6 @@
 from juiced.carriable import Apple, Cup, Orange
 from juiced.character import Character, Human, Robot
-from juiced.interactable import AppleStorage, Juicer, OrangeStorage, StorageButton, Wall, Table, Counter
+from juiced.interactable import AppleStorage, Chicken, Gorilla, Juicer, OrangeStorage, StorageButton, Table, Wall
 
 
 class Metadata:
@@ -88,12 +88,8 @@ class Metadata:
 
         }
 
-        self.counter = {
-
-            Counter.CUSTOMER_CHICKEN: Metadata.Entry("counter/chicken.png"),
-            Counter.CUSTOMER_GORILLA: Metadata.Entry("counter/gorilla.png")
-
-        }
+        self.chicken = Metadata.Entry("customer/chicken.png")
+        self.gorilla = Metadata.Entry("customer/gorilla.png")
 
         self.human = {
 
@@ -230,6 +226,12 @@ class Metadata:
         elif isinstance(entity, Apple):
             return self.apple
 
+        elif isinstance(entity, Orange):
+            return self.orange
+
+        elif isinstance(entity, Cup):
+            return self.cup[entity.filling]
+
         elif isinstance(entity, Table) and entity.filling is None:
             return self.table["default"]
 
@@ -242,12 +244,6 @@ class Metadata:
         elif isinstance(entity, Table) and isinstance(entity.filling, Cup):
             return self.table["cup"][entity.filling.filling]
 
-        elif isinstance(entity, Orange):
-            return self.orange
-
-        elif isinstance(entity, Cup):
-            return self.cup[entity.filling]
-
         elif isinstance(entity, Juicer):
             return self.juicer[entity.filling]
 
@@ -259,6 +255,12 @@ class Metadata:
 
         elif isinstance(entity, StorageButton):
             return self.storage_button[type(entity.storage)]
+
+        elif isinstance(entity, Chicken):
+            return self.chicken
+
+        elif isinstance(entity, Gorilla):
+            return self.gorilla
 
         elif isinstance(entity, Human) and entity.carriage is None:
             return self.human["default"][entity.direction]
@@ -283,6 +285,3 @@ class Metadata:
 
         elif isinstance(entity, Robot) and isinstance(entity.carriage, Cup):
             return self.robot["cup"][entity.carriage.filling][entity.direction]
-
-        elif isinstance(entity, Counter):
-            return self.counter[entity.customer]

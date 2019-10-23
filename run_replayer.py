@@ -1,13 +1,14 @@
 import json
+import sys
 
-from tkinter import Frame, Label, Tk
 from PIL import Image, ImageTk
+from tkinter import Frame, Label, Tk
 
 from juiced.metadata import Metadata
 from juiced.stage import Stage
 
 
-class GUI:
+class Replayer:
 
     def __init__(self, trajectory):
 
@@ -65,7 +66,7 @@ class GUI:
 
             for y in range(self.stage.width):
 
-                image = Image.open("../juiced/assets/misc/ground.png").convert("RGBA")
+                image = Image.open("juiced/assets/misc/ground.png").convert("RGBA")
                 image = image.resize((40, 40))
                 image = ImageTk.PhotoImage(image)
 
@@ -89,10 +90,10 @@ class GUI:
 
         metadata = self.metadata[entity]
 
-        image_ground = Image.open("../juiced/assets/misc/ground.png").convert("RGBA")
+        image_ground = Image.open("juiced/assets/misc/ground.png").convert("RGBA")
         image_ground = image_ground.resize((40, 40))
 
-        image = Image.open("../juiced/assets/" + metadata.url).convert("RGBA")
+        image = Image.open("juiced/assets/" + metadata.url).convert("RGBA")
         image = image.resize((40, 40))
 
         image_ground.paste(image, (0, 0), image)
@@ -102,8 +103,7 @@ class GUI:
 
 if __name__ == "__main__":
 
-    room_id = "test.large"
-    trajectory_filename = "../trajectories/" + room_id + ".json"
+    trajectory_filename = sys.argv[1]
     trajectory_file = open(trajectory_filename)
     trajectory = json.loads(trajectory_file.read())
-    gui = GUI(trajectory)
+    replayer = Replayer(trajectory)
