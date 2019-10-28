@@ -40,11 +40,8 @@ class Character:
 
         elif action in self.movement_mapping:
 
-            if self.direction == self.movement_mapping[action]:
-                self._move(action)
-
-            elif self.direction != self.movement_mapping[action]:
-                self._turn(action)
+            self._turn(action)
+            self._move(action)
 
     def _move(self, action):
 

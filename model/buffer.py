@@ -1,5 +1,6 @@
 import random
 
+
 class ReplayBuffer(object):
     
     def __init__(self, capacity):
@@ -23,4 +24,3 @@ class ReplayBuffer(object):
     def __len__(self):
         
         return len(self.buffer)
-

@@ -40,6 +40,7 @@ class AppleStorage(Interactable):
     def interact(self, interactor):
 
         if self.is_open and interactor.carriage is None:
+
             interactor.carriage = Apple()
 
 
@@ -149,11 +150,11 @@ class Chicken(Customer):
 
     def __init__(self):
 
-        super().__init__((1, 0, 20, 5))
+        super().__init__((5, 0, 20, 0))
 
 
 class Gorilla(Customer):
 
     def __init__(self):
 
-        super().__init__((0, 1, 5, 20))
+        super().__init__((0, 5, 0, 20))

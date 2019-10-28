@@ -42,7 +42,7 @@ class JuicedEnv(gym.Env):
         state = self.stage.get_state()
         state = np.asarray(state)
 
-        return state, reward_diff, self.n_steps > 100, {}
+        return state, reward_diff, self.n_steps > 20, {}
     
     def reset(self):
 
