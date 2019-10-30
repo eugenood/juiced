@@ -15,7 +15,7 @@ window.onload = function() {
 
     socket.on("user_changed:" + roomId, function(humanUsername, robotUsername, state, assetsUrls) {
 
-        if (isInitialized) return;
+        if (isInitialized) return
 
         isHuman = (humanUsername === username)
 

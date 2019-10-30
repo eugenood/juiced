@@ -35,15 +35,14 @@ class Character:
     def act(self, action):
 
         if action == Character.ACTION_INTERACT:
-
             self._interact()
 
         elif action in self.movement_mapping:
-
-            self._turn(action)
             self._move(action)
 
     def _move(self, action):
+
+        self.direction = self.movement_mapping[action]
 
         old_x, old_y = self.stage.find(self)
         new_x, new_y = old_x, old_y
@@ -54,10 +53,6 @@ class Character:
         if action == Character.ACTION_RIGHT: new_y = old_y + 1
 
         self.stage.move(old_x, old_y, new_x, new_y)
-
-    def _turn(self, action):
-
-        self.direction = self.movement_mapping[action]
 
     def _interact(self):
 

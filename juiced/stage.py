@@ -1,5 +1,5 @@
 from juiced.character import Human, Robot
-from juiced.interactable import AppleStorage, Chicken, Cup, Gorilla, Juicer, OrangeStorage, StorageButton, Table, Wall
+from juiced.interactable import Apple, AppleStorage, Customer, Cup, Juicer, Orange, OrangeStorage, StorageButton, Table, Wall
 from juiced.metadata import Metadata
 
 
@@ -7,18 +7,16 @@ class Stage:
 
     def __init__(self, level):
 
-        self.level = level
-
-        self.height = self.level["stage_size"][0]
-        self.width = self.level["stage_size"][1]
+        self.height = level["stage_size"][0]
+        self.width = level["stage_size"][1]
 
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.metadata = Metadata.get_instance()
 
         self.rewardables = []
 
-        self._initialize_characters()
-        self._initialize_entities()
+        self._initialize_characters(level)
+        self._initialize_entities(level)
 
     def get(self, x, y):
 
@@ -87,60 +85,66 @@ class Stage:
 
         return total_reward
 
-    def _initialize_characters(self):
+    def _initialize_characters(self, level):
 
         self.human = Human(self)
         self.robot = Robot(self)
 
-        self.add(self.human, self.level["human_location"][0], self.level["human_location"][1])
-        self.add(self.robot, self.level["robot_location"][0], self.level["robot_location"][1])
+        self.add(self.human, level["human_location"][0], level["human_location"][1])
+        self.add(self.robot, level["robot_location"][0], level["robot_location"][1])
 
-    def _initialize_entities(self):
+    def _initialize_entities(self, level):
 
-        for wall_location in self.level["wall_locations"]:
-            self.add(Wall(), wall_location[0], wall_location[1])
+        if "wall_locations" in level:
+            for wall_location in level["wall_locations"]:
+                self.add(Wall(), wall_location[0], wall_location[1])
 
-        for apple_location in self.level["apple_locations"]:
-            self.add(Apple(), apple_location[0], apple_location[1])
+        if "apple_locations" in level:
+            for apple_location in level["apple_locations"]:
+                self.add(Apple(), apple_location[0], apple_location[1])
 
-        for orange_location in self.level["orange_locations"]:
-            self.add(Orange(), orange_location[0], orange_position[1])
+        if "orange_locations" in level:
+            for orange_location in level["orange_locations"]:
+                self.add(Orange(), orange_location[0], orange_location[1])
 
-        for cup_location in self.level["cup_locations"]:
-            self.add(Cup(), cup_location[0], cup_location[1])
+        if "cup_locations" in level:
+            for cup_location in level["cup_locations"]:
+                self.add(Cup(), cup_location[0], cup_location[1])
 
-        for table_location in self.level["table_locations"]:
-            self.add(Table(), table_location[0], table_location[1])
+        if "table_locations" in level:
+            for table_location in level["table_locations"]:
+                self.add(Table(), table_location[0], table_location[1])
 
-        for juicer_location in self.level["juicer_locations"]:
-            self.add(Juicer(), juicer_location[0], juicer_location[1])
+        if "juicer_locations" in level:
+            for juicer_location in level["juicer_locations"]:
+                self.add(Juicer(), juicer_location[0], juicer_location[1])
 
-        for apple_storage_location, apple_storage_button_location in self.level["apple_storage_locations"]:
+        if "apple_storage_locations" in level:
 
-            apple_storage = AppleStorage()
-            apple_storage_button = StorageButton(apple_storage)
+            for apple_storage_location, apple_storage_button_location in level["apple_storage_locations"]:
 
-            self.add(apple_storage, apple_storage_location[0], apple_storage_location[1])
-            self.add(apple_storage_button, apple_storage_button_location[0], apple_storage_button_location[1])
+                apple_storage = AppleStorage()
+                apple_storage_button = StorageButton(apple_storage)
 
-        for orange_storage_location, orange_storage_button_location in self.level["orange_storage_locations"]:
+                self.add(apple_storage, apple_storage_location[0], apple_storage_location[1])
+                self.add(apple_storage_button, apple_storage_button_location[0], apple_storage_button_location[1])
 
-            orange_storage = OrangeStorage()
-            orange_storage_button = StorageButton(orange_storage)
+        if "orange_storage_locations" in level:
 
-            self.add(orange_storage, orange_storage_location[0], orange_storage_location[1])
-            self.add(orange_storage_button, orange_storage_button_location[0], orange_storage_button_location[1])
+            for orange_storage_location, orange_storage_button_location in level["orange_storage_locations"]:
 
-        for chicken_location in self.level["chicken_locations"]:
+                orange_storage = OrangeStorage()
+                orange_storage_button = StorageButton(orange_storage)
 
-            chicken = Chicken()
+                self.add(orange_storage, orange_storage_location[0], orange_storage_location[1])
+                self.add(orange_storage_button, orange_storage_button_location[0], orange_storage_button_location[1])
 
-            self.rewardables.append(chicken)
-            self.add(chicken, chicken_location[0], chicken_location[1])
+        if "customer_locations" in level:
 
-        for gorilla_location in self.level["gorilla_locations"]:
+            for customer_location in level["customer_locations"]:
 
-            gorilla = Gorila()
+                reward_distribution = level["reward_distribution"]
+                customer = Customer(reward_distribution)
 
-            self.rewardables.append(gorilla)
-            self.add(gorilla, gorilla_location[0], gorilla_location[1])
+                self.rewardables.append(customer)
+                self.add(customer, customer_location[0], customer_location[1])

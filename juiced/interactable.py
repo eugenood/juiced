@@ -1,15 +1,15 @@
 from juiced.carriable import Apple, Cup, Orange
 
 
-class Interactable: pass
+class Interactable:
+
+    def interact(self, interactor): pass
 
 
 class Rewardable(Interactable): pass
 
 
-class Wall(Interactable):
-
-    def interact(self, interactor): pass
+class Wall(Interactable): pass
 
 
 class Table(Interactable):
@@ -144,17 +144,3 @@ class Customer(Rewardable):
 
             self.reward = self.reward + self.reward_distribution[3]
             interactor.carriage.filling = Cup.FILLING_EMPTY
-
-
-class Chicken(Customer):
-
-    def __init__(self):
-
-        super().__init__((5, 0, 20, 0))
-
-
-class Gorilla(Customer):
-
-    def __init__(self):
-
-        super().__init__((0, 5, 0, 20))

@@ -2,17 +2,18 @@ import json
 import os
 
 from juiced.character import Character
+from juiced.level import Level
 from juiced.stage import Stage
 
 
 class Room:
 
-    def __init__(self, room_id, level):
+    def __init__(self, room_id, level_id):
         
         self.room_id = room_id
-        self.level = level
 
-        self.stage = Stage(level)
+        self.level = Level.create(level_id)
+        self.stage = Stage(self.level)
         
         self.human_username = None
         self.robot_username = None
@@ -20,7 +21,7 @@ class Room:
         self.human_actions = []
         self.robot_actions = []
 
-        self.reward_previous = 0
+        self.reward_prev = 0
 
     def add_player(self, username):
 
@@ -74,8 +75,8 @@ class Room:
         self.human_actions.append(human_action)
         self.robot_actions.append(robot_action)
 
-        reward_current = self.stage.get_reward()
-        reward_diff = reward_current - self.reward_previous
-        self.reward_previous = reward_current
+        reward_curr = self.stage.get_reward()
+        reward_diff = reward_curr - self.reward_prev
+        self.reward_prev = reward_curr
 
         return reward_diff

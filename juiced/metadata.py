@@ -1,21 +1,21 @@
 from juiced.carriable import Apple, Cup, Orange
 from juiced.character import Character, Human, Robot
-from juiced.interactable import AppleStorage, Chicken, Gorilla, Juicer, OrangeStorage, StorageButton, Table, Wall
+from juiced.interactable import AppleStorage, Customer, Juicer, OrangeStorage, StorageButton, Table, Wall
 
 
 class Metadata:
 
-    urls = []
     instance = None
+    entries = []
 
     class Entry:
 
         def __init__(self, url):
 
-            self.index = len(Metadata.urls)
+            self.index = len(Metadata.entries)
             self.url = url
 
-            Metadata.urls.append(url)
+            Metadata.entries.append(self)
 
     @staticmethod
     def get_instance():
@@ -88,8 +88,7 @@ class Metadata:
 
         }
 
-        self.chicken = Metadata.Entry("customer/chicken.png")
-        self.gorilla = Metadata.Entry("customer/gorilla.png")
+        self.customer = Metadata.Entry("misc/customer.png")
 
         self.human = {
 
@@ -256,11 +255,8 @@ class Metadata:
         elif isinstance(entity, StorageButton):
             return self.storage_button[type(entity.storage)]
 
-        elif isinstance(entity, Chicken):
-            return self.chicken
-
-        elif isinstance(entity, Gorilla):
-            return self.gorilla
+        elif isinstance(entity, Customer):
+            return self.customer
 
         elif isinstance(entity, Human) and entity.carriage is None:
             return self.human["default"][entity.direction]

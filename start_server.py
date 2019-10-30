@@ -43,10 +43,11 @@ def login():
 
     if room_id not in rooms:
 
-        level_id = room_id.split(".")[1] if len(room_id.split(".")) == 2 else "small"
-        rooms[room_id] = Room(room_id, Level.create(level_id))
+        level_id = room_id.split(".")[1] if len(room_id.split(".")) == 2 else "default"
+        rooms[room_id] = Room(room_id, level_id)
 
     rooms[room_id].add_player(username)
+
     return redirect(url_for("room", room_id=room_id, username=username))
 
 
@@ -68,7 +69,7 @@ def handle_user_entered(req):
     human_username = room.human_username
     robot_username = room.robot_username
     state = room.get_state()
-    assets_urls = list(map(lambda url : "/../../../assets/" + url, Metadata.urls))
+    assets_urls = list(map(lambda entry : "/../../../assets/" + entry.url, Metadata.entries))
 
     socket.emit("user_changed:" + room_id, data=(human_username, robot_username, state, assets_urls))
 

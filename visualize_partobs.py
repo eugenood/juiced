@@ -1,31 +1,41 @@
 import json
+import random
 import sys
+
+import torch
+import torch.nn.functional as F
 
 from PIL import Image, ImageTk
 from tkinter import Frame, Label, Tk
 
 from juiced.metadata import Metadata
-from juiced.env import JuicedEnv
 
-from model.agent import LaurelAgent
+from model.agent import LaurelAgentV1
+from model.env import JuicedEnv
 
 
 class Visualizer:
 
-    def __init__(self, level_id, model_path):
+    def __init__(self, human_model_path, robot_model_path, intention_net_path):
 
-        self.env = JuicedEnv(level_id)
+        self.env = JuicedEnv()
 
-        self.state = self.env.reset()
+        self.agent = LaurelAgentV1(self.env)
+        self.agent.initialize_policy_network(human_model_path, robot_model_path)
+        self.agent.initialize_intention_network(intention_net_path)
+        self.agent.initialize_policy_testing()
+        self.agent.initialize_intention_testing()
 
-        self.agent = LaurelAgent(self.env)
-        self.agent.initialize_network(model_path)
-        self.agent.initialize_testing()
-
+        self.state, self.intention = self.env.reset()
         self.state = self.agent.convert_state(self.state)
+        self.intention = self.agent.convert_intention(self.intention)
 
-        self.height = self.env.observation_space.shape[0]
-        self.width = self.env.observation_space.shape[1]
+        self.prev_human_action = None
+
+        print(self.intention)
+
+        self.height = self.env.dim_state[1]
+        self.width = self.env.dim_state[2]
 
         self.metadata = Metadata.get_instance()
         self.root = Tk()
@@ -41,8 +51,22 @@ class Visualizer:
 
         def handle_keyboard_event(_):
 
-            action = self.agent.act(self.state)
-            self.state, _, done, _ = self.env.step((action.item(), 0))
+            if self.prev_human_action is not None:
+                predicted_intention = self.agent.intention_net(self.state, self.prev_human_action)
+
+            else: predicted_intention = torch.tensor([0.5, 0.5]).cuda()
+
+            print(predicted_intention)
+            print(self.agent.human_policy_net(self.state, self.intention))
+            print(self.agent.robot_policy_net(self.state, predicted_intention))
+            print("======================================")
+
+            human_action = self.agent.human_act(self.state, self.intention)
+            robot_action = self.agent.robot_act(self.state, predicted_intention)
+
+            self.prev_human_action = F.one_hot(human_action, self.agent.dim_action).float()
+
+            self.state, _, done = self.env.step(human_action.item(), robot_action.item())
             self.state = self.agent.convert_state(self.state)
 
             if done:
@@ -102,4 +126,4 @@ class Visualizer:
 
 if __name__ == "__main__":
 
-    Visualizer(sys.argv[1], sys.argv[2])
+    Visualizer(sys.argv[1], sys.argv[2], sys.argv[3])
